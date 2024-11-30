@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="using:DesktopDNS.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="DesktopDNS.Views.DomainWindow"
+		x:DataType="vm:DomainViewModel"
+		Icon="/Assets/DesktopDNS.ico"
+		Width="650"
+		Height="450"
+        SystemDecorations="Full"
+        CanResize="False"
+		WindowStartupLocation="CenterScreen"
+		xmlns:converters="using:DesktopDNS.Converters"
+        Title="域名管理">
+	<Window.Resources>
+		<converters:BooleanConverter x:Key="BooleanConverter"/>
+		<converters:ModeConverter x:Key="ModeConverter"/>
+	</Window.Resources>
+	
+	<StackPanel Margin="10">
+		
+		<StackPanel Orientation="Horizontal" Margin="5">
+			<Label Classes="label">分组名称：</Label>
+			<Label Classes="text" Content="{CompiledBinding Name}"></Label>
+		</StackPanel>
+		<Button Tapped="OnClickAddDomain" Classes="button primary mini" Margin="5" Content="添加" HorizontalAlignment="Right" />
+		<StackPanel Classes="grid-header">
+			<StackPanel>
+				<Label Content="类型" Margin="5 0" Width="60"></Label>
+				<Label Content="域名" Width="130"></Label>
+				<Label Content="记录值" Width="130"></Label>
+				<Label Content="解析服务器" Width="130"></Label>
+				<Label Content="匹配" Width="70"></Label>
+				<Label Content="状态" Width="50"></Label>
+			</StackPanel>
+			<Rectangle Height="1" Fill="#EDEDEE"/>
+		</StackPanel>
+		<ScrollViewer Height="320">
+		<ItemsControl ItemsSource="{CompiledBinding Domains}" >
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Classes="row">
+						<StackPanel>
+							<Label Margin="5 0" Content="{CompiledBinding RecordType}" Width="60"></Label>
+							<Label Content="{CompiledBinding Hostname}" Width="130"></Label>
+							<Label Content="{CompiledBinding Value}" ToolTip.Tip="{CompiledBinding Value}" Width="130"></Label>
+							<Label Content="{CompiledBinding Server}" Width="130"></Label>
+							<Label Content="{CompiledBinding Mode,Converter={StaticResource ModeConverter}}" Width="70"></Label>
+							<Label Classes.Success="{CompiledBinding Enable}" Classes.Danger="{CompiledBinding !Enable}" Content="{CompiledBinding Enable,Converter={StaticResource BooleanConverter},ConverterParameter=启用|禁用}" Width="50"></Label>
+							<Label Tapped="OnClickItemButtons" Name="editor" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe611;" Margin="0 2 5 2" ToolTip.Tip="编辑"></Label>
+							<Label Tapped="OnClickItemButtons" Name="delete" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe705;" Margin="5 2" ToolTip.Tip="删除"></Label>
+						</StackPanel>
+						<Rectangle Height="1" Fill="#EDEDEE"/>
+					</StackPanel>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+		</ScrollViewer>
+	</StackPanel>
+	
+</Window>

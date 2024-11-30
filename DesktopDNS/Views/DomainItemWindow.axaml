@@ -1,0 +1,77 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="DesktopDNS.Views.DomainItemWindow"
+		x:DataType="vm:DomainItemViewModel"
+		xmlns:vm="using:DesktopDNS.ViewModels"
+		Width="400"
+        Height="340"
+		SystemDecorations="BorderOnly"
+		WindowStartupLocation="CenterOwner"
+		ShowInTaskbar="False"
+        Title="{CompiledBinding Title}">
+	<StackPanel>
+		<StackPanel Classes="titlebar">
+			<Grid RowDefinitions="*" ColumnDefinitions="*,40,40,40">
+				<Label Grid.Column="0" Grid.Row="0" Classes="title" Content="{CompiledBinding Title}"/>
+			</Grid>
+			<Rectangle Height="1" Fill="#EDEDEE"/>
+		</StackPanel>
+		<StackPanel Classes="form">
+			<StackPanel Classes="form-item">
+				<Label  Classes="form-item-label">类型</Label>
+				<StackPanel Classes="form-item-control">
+					<ComboBox SelectedIndex="{CompiledBinding RecordTypeIndex}" Width="200">
+						<ComboBoxItem>A</ComboBoxItem>
+						<ComboBoxItem>AAAA</ComboBoxItem>
+						<ComboBoxItem>CNAME</ComboBoxItem>
+					</ComboBox>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Classes="form-item">
+				<Label  Classes="form-item-label">域名</Label>
+				<StackPanel Classes="form-item-control">
+					<TextBox IsEnabled="{CompiledBinding IsNew}"  Text="{CompiledBinding Hostname}" />
+				</StackPanel>
+
+			</StackPanel>
+			<StackPanel Classes="form-item">
+				<Label  Classes="form-item-label">域名匹配模式</Label>
+				<StackPanel Classes="form-item-control">
+					<ComboBox SelectedIndex="{CompiledBinding ModeIndex}" Width="200">
+						<ComboBoxItem>全等</ComboBoxItem>
+						<ComboBoxItem>正则表达式</ComboBoxItem>
+						<ComboBoxItem>模式匹配</ComboBoxItem>
+					</ComboBox>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Classes="form-item">
+				<Label  Classes="form-item-label">记录值</Label>
+				<StackPanel Classes="form-item-control">
+					<TextBox Text="{CompiledBinding Value}"></TextBox>
+				</StackPanel>
+
+			</StackPanel>
+			<StackPanel Classes="form-item">
+				<Label  Classes="form-item-label">解析服务器</Label>
+				<StackPanel Classes="form-item-control">
+					<TextBox Text="{CompiledBinding Server}"></TextBox>
+				</StackPanel>
+
+			</StackPanel>
+			<StackPanel Classes="form-item">
+				<Label  Classes="form-item-label">启用</Label>
+				<StackPanel Classes="form-item-control">
+					<CheckBox IsChecked="{CompiledBinding Enable}"></CheckBox>
+				</StackPanel>
+
+			</StackPanel>
+			<StackPanel Classes="form-item-buttons">
+				<Button Tapped="OnOk" Classes="button primary mini" Margin="5">保存</Button>
+				<Button Tapped="OnCancel" Classes="button default mini" Margin="5">取消</Button>
+			</StackPanel>
+		</StackPanel>
+	</StackPanel>
+</Window>

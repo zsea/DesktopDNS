@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net9.0</TargetFramework>
+    <Description>Library for parsing and serializing DNS messages. Includes a basic DNS client and server.</Description>
+    <Company>Mirza Kapetanovic</Company>
+    <Authors>Mirza Kapetanovic</Authors>
+    <AssemblyVersion>7.0.0.0</AssemblyVersion>
+    <FileVersion>7.0.0.0</FileVersion>
+    <Version>7.0.0</Version>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>dns request response client server</PackageTags>
+    <PackageProjectUrl>https://github.com/kapetan/dns</PackageProjectUrl>
+    
+	  <PublishAot>true</PublishAot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="Properties\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

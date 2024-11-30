@@ -1,0 +1,130 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DesktopDNS.App"
+			 xmlns:semi="https://irihi.tech/semi"
+             xmlns:local="using:DesktopDNS"
+			 RequestedThemeVariant="Light"
+             >
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+	<Application.Styles>
+		<semi:SemiTheme Locale="zh-CN" />
+		<Style Selector="Label.label">
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="Width" Value="100" />
+			<Setter Property="HorizontalContentAlignment" Value="Right" />
+		</Style>
+		<Style Selector="Label.text">
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="Width" Value="100" />
+		</Style>
+		<Style Selector="Label.danger">
+			<Setter Property="Foreground" Value="#f93920" />
+		</Style>
+		<Style Selector="Label.quaternary">
+			<Setter Property="Foreground" Value="#b0b1b2" />
+		</Style>
+		<Style Selector="Label.success">
+			<Setter Property="Foreground" Value="#3bb346" />
+		</Style>
+		<Style Selector="Label.link">
+			<Setter Property="Foreground" Value="Blue" />
+			<Style Selector="^:pointerover">
+				<Setter Property="Foreground" Value="Red" />
+				<Setter Property="Cursor" Value="Hand" />
+			</Style>
+		</Style>
+		<Style Selector="Button.default">
+			<Setter Property="Background" Value="#ffffff" />
+			<Setter Property="BorderBrush" Value="#d9d9d9" />
+			<Setter Property="Foreground" Value="Black" />
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<Setter Property="Background" Value="#ffffff" />
+				<Setter Property="BorderBrush" Value="#c0c0c0" />
+			</Style>
+		</Style>
+		<Style Selector="Button.large">
+			<Setter Property="Padding" Value="30 10" />
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+		<Style Selector="Button.mini">
+			<Setter Property="Padding" Value="10 4" />
+			<Setter Property="FontSize" Value="12" />
+		</Style>
+		<Style Selector="Button.primary">
+			<Setter Property="Background" Value="#1677FF" />
+			<Setter Property="BorderBrush" Value="#1677FF" />
+			<Setter Property="Foreground" Value="White" />
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<Setter Property="Background" Value="#4096ff" />
+			</Style>
+		</Style>
+		<Style Selector="Button.danger">
+			<Setter Property="Background" Value="#ff4d4f" />
+			<Setter Property="BorderBrush" Value="#ff4d4f" />
+			<Setter Property="Foreground" Value="White" />
+
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<Setter Property="Background" Value="#ff7875" />
+			</Style>
+		</Style>
+		<Style Selector="StackPanel.grid-header">
+			<Style Selector="^>StackPanel">
+				<Setter Property="Height" Value="40" />
+				<Setter Property="Orientation" Value="Horizontal" />
+				<Style Selector="^>Label">
+					<Setter Property="FontWeight" Value="Bold" />
+					<Setter Property="VerticalContentAlignment" Value="Center" />
+				</Style>
+			</Style>
+		</Style>
+		<Style Selector="StackPanel.row">
+			<Style Selector="^>StackPanel">
+				<Setter Property="Height" Value="40" />
+				<Setter Property="Orientation" Value="Horizontal" />
+				<Setter Property="Background" Value="Transparent" />
+				<Style Selector="^:pointerover">
+					<Setter Property="Background" Value="#F2F2F2" />
+				</Style>
+				<Style Selector="^>Label">
+					<Setter Property="VerticalContentAlignment" Value="Center" />
+				</Style>
+			</Style>
+		</Style>
+		<Style Selector="StackPanel.form">
+			<Style Selector="^>StackPanel.form-item">
+				<Setter Property="Orientation" Value="Horizontal" />
+				<Setter Property="Margin" Value="5" />
+				<Style Selector="^>Label.form-item-label">
+					<Setter Property="HorizontalAlignment" Value="Right" />
+					<Setter Property="VerticalAlignment" Value="Center" />
+					<Setter Property="HorizontalContentAlignment" Value="Right" />
+					<Setter Property="Width" Value="100" />
+					<Setter Property="Margin" Value="10 0" />
+				</Style>
+				<Style Selector="^>StackPanel.form-item-control">
+					<Setter Property="HorizontalAlignment" Value="Left" />
+					<Setter Property="Width" Value="200" />
+				</Style>
+			</Style>
+			<Style Selector="^>StackPanel.form-item-buttons">
+				<Setter Property="Orientation" Value="Horizontal" />
+				<Setter Property="Margin" Value="5" />
+				<Setter Property="HorizontalAlignment" Value="Center" />
+			</Style>
+		</Style>
+		<Style Selector="StackPanel.titlebar">
+			
+			<Style Selector="^>Grid">
+				<Setter Property="Height" Value="30" />
+				<Style Selector="^>Label.title">
+					<Setter Property="VerticalAlignment" Value="Center" />
+					<Setter Property="Margin" Value="10 0" />
+					<Setter Property="FontWeight" Value="Bold" />
+				</Style>
+			</Style>
+		</Style>
+	</Application.Styles>
+	
+</Application>

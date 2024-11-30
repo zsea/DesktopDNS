@@ -1,0 +1,265 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DesktopDNS.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="650" d:DesignHeight="500"
+        x:Class="DesktopDNS.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/DesktopDNS.ico"
+        Title="DesktopDNS"
+		Width="650"
+        Height="500"
+        SystemDecorations="Full"
+        CanResize="False"
+		WindowStartupLocation="CenterScreen"
+		Background="#ffffff"
+		xmlns:viewmodels="using:DesktopDNS.ViewModels"
+		xmlns:converters="using:DesktopDNS.Converters"
+		>
+	<Window.Resources>
+		<converters:BooleanConverter x:Key="BooleanConverter"/>
+	</Window.Resources>
+	<Window.Styles>
+
+	</Window.Styles>
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+
+	<SplitView IsPaneOpen="True"
+           DisplayMode="Inline"
+           OpenPaneLength="200">
+		<SplitView.Pane>
+			<StackPanel Background="#f6f8fa">
+				<StackPanel.Styles>
+					<Style Selector="Border.item:pointerover">
+						<Setter Property="Background" Value="#F2F2F2" />
+					</Style>
+					<Style Selector="Border.item">
+						<Setter Property="Cursor" Value="Hand" />
+					</Style>
+					<Style Selector="Border.item Label">
+						<Setter Property="FontSize" Value="16" />
+					</Style>
+					<Style Selector="Border.item.checked">
+						<Setter Property="Background" Value="#E0E0E0" />
+					</Style>
+				</StackPanel.Styles>
+				<Rectangle Height="60" Fill="Transparent"/>
+				<Border Name="status" Tapped="OnClickMenuItem" Height="40" Grid.Row="1" Width="200" Classes="item" Classes.checked="{CompiledBinding IsCheckedStatus}">
+					<StackPanel VerticalAlignment="Center"  Orientation="Horizontal" Margin="10 0">
+						<Svg Path="/Assets/status.svg" Height="16" />
+						<Rectangle Fill="Transparent" Width="10" />
+						<Label Content="状态"></Label>
+						<Rectangle Fill="Transparent" Width="200" />
+					</StackPanel>
+				</Border>
+				<Border Name="settings" Tapped="OnClickMenuItem" Height="40" Grid.Row="1" Width="200" Classes="item" Classes.checked="{CompiledBinding IsCheckedSettings}">
+					<StackPanel VerticalAlignment="Center"  Orientation="Horizontal" Margin="10 0">
+						<Svg Path="/Assets/settings.svg" Height="16" />
+						<Rectangle Fill="Transparent" Width="10" />
+						<Label Content="设置"></Label>
+						<Rectangle Fill="Transparent" Width="200" />
+					</StackPanel>
+				</Border>
+				<Border Name="logs" Tapped="OnClickMenuItem" Height="40" Grid.Row="1" Width="200" Classes="item" Classes.checked="{CompiledBinding IsCheckedLogs}">
+					<StackPanel VerticalAlignment="Center"  Orientation="Horizontal" Margin="10 0">
+						<Svg Path="/Assets/logs.svg" Height="16" />
+						<Rectangle Fill="Transparent" Width="10" />
+						<Label Content="日志"></Label>
+						<Rectangle Fill="Transparent" Width="200" />
+					</StackPanel>
+				</Border>
+				<Border Name="about" Tapped="OnClickMenuItem" Height="40" Grid.Row="1" Width="200" Classes="item" Classes.checked="{CompiledBinding IsCheckedAbout}">
+					<StackPanel VerticalAlignment="Center"  Orientation="Horizontal" Margin="10 0">
+						<Svg Path="/Assets/about.svg" Height="16" />
+						<Rectangle Fill="Transparent" Width="10" />
+						<Label Content="关于"></Label>
+						<Rectangle Fill="Transparent" Width="200" />
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</SplitView.Pane>
+
+		<StackPanel Margin="10">
+			<StackPanel.DataTemplates>
+				<DataTemplate DataType="viewmodels:StatusViewModel">
+					<StackPanel Margin="20 30">
+						<StackPanel Orientation="Horizontal" Margin="5">
+							<Label Classes="label">当前状态：</Label>
+							<Label Classes="text danger" Content="已停止" IsVisible="{CompiledBinding !IsRuning}"></Label>
+							<Label Classes="text success" Content="运行中" IsVisible="{CompiledBinding IsRuning}"></Label>
+
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="5">
+							<Label Classes="label">监听端口：</Label>
+							<Label Classes="text" Content="{CompiledBinding ListeningPort}" IsVisible="{CompiledBinding IsRuning}"></Label>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="5">
+							<Label Classes="label">默认服务器：</Label>
+							<Label Classes="text" Content="{CompiledBinding DefaultServer}" IsVisible="{CompiledBinding IsRuning}"></Label>
+						</StackPanel>
+						<Rectangle Height="30" Fill="Transparent"/>
+						<Button Classes="button primary large" IsVisible="{CompiledBinding !IsRuning}" Tapped="OnStart">启动</Button>
+						<Button Classes="button danger large" IsVisible="{CompiledBinding IsRuning}" Tapped="OnShutdown">停止</Button>
+						<Rectangle Height="30" Fill="Transparent"/>
+						<Rectangle Height="1" Fill="#EDEDEE" Margin=" 5"/>
+						<Rectangle Height="30" Fill="Transparent"/>
+						<StackPanel IsVisible="{CompiledBinding IsRuning}">
+							<StackPanel Orientation="Horizontal">
+								<Label Classes="label">运行时长：</Label>
+								<Label Classes="text quaternary" Content="{CompiledBinding RunText}" Margin="10 2" FontSize="12"></Label>
+								<Label Classes="label">处理请求：</Label>
+								<Label Classes="text quaternary" Content="{CompiledBinding HandleTimes}" Margin="10 2" FontSize="12"></Label>
+
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" Margin="0 10">
+								<Label Classes="label">本地解析：</Label>
+								<Label Classes="text quaternary" Content="{CompiledBinding LocalResolveTimes}" Margin="10 2" FontSize="12"></Label>
+								<Label Classes="label">缓存数量：</Label>
+								<Label Classes="text quaternary" Content="{CompiledBinding CacheCount}" Margin="10 2" FontSize="12"></Label>
+							</StackPanel>
+						</StackPanel>
+					</StackPanel>
+				</DataTemplate>
+				<DataTemplate DataType="viewmodels:SettingsViewModel">
+					<ScrollViewer Height="480">
+						<StackPanel>
+							<Expander VerticalAlignment="Top" IsExpanded="True">
+								<Expander.Header>
+									服务设置
+								</Expander.Header>
+								<Grid RowDefinitions="*,*,*,*,*" ColumnDefinitions="150,*">
+									
+									<TextBlock Grid.Row="0" Grid.Column="0" Margin="0 5"
+											   VerticalAlignment="Center">监听端口</TextBlock>
+									<NumericUpDown Grid.Row="0" Grid.Column="1"  Margin="0 5" Minimum="1" Maximum="65535"
+											  Width="200" Value="{CompiledBinding Port}" HorizontalAlignment="Left" />
+									<TextBlock Grid.Row="1" Grid.Column="0"  Margin="0 5"
+											   VerticalAlignment="Center">默认DNS服务器</TextBlock>
+									<TextBox  Grid.Row="1" Grid.Column="1" Watermark="8.8.8.8" Text="{CompiledBinding DefaultServer}" Margin="0 5" />
+									<TextBlock Grid.Row="2" Grid.Column="0"  Margin="0 5"
+											   VerticalAlignment="Center">日志级别</TextBlock>
+									<SplitButton Width="200" Content="{CompiledBinding LogLevel}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" >
+										<SplitButton.Flyout>
+											<MenuFlyout Placement="BottomEdgeAlignedRight">
+												<MenuItem Header="Trace" Click="OnSwitchLogLevel" />
+												<MenuItem Header="Debug" Click="OnSwitchLogLevel" />
+												<MenuItem Header="Info" Click="OnSwitchLogLevel" />
+												<MenuItem Header="Warn" Click="OnSwitchLogLevel" />
+												<MenuItem Header="Error" Click="OnSwitchLogLevel" />
+												<MenuItem Header="Fatal" Click="OnSwitchLogLevel" />
+											</MenuFlyout>
+										</SplitButton.Flyout>
+									</SplitButton>
+									<TextBlock Grid.Row="3" Grid.Column="0" Margin="0 5"
+											   VerticalAlignment="Center">开机自动启动</TextBlock>
+									<CheckBox   Grid.Row="3" Grid.Column="1" Margin="0 5" VerticalAlignment="Center" IsChecked="{CompiledBinding AutoRun}"/>
+									<StackPanel Grid.Row="4" Grid.Column="0"></StackPanel>
+									<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+										<Button Tapped="OnSaveServerSettings" Classes="button primary mini" Margin="5">保存</Button>
+									</StackPanel>
+								</Grid>
+							</Expander>
+							<Expander VerticalAlignment="Top" IsExpanded="True">
+								<Expander.Header>
+									分组管理
+								</Expander.Header>
+								<StackPanel>
+									<StackPanel Classes="grid-header">
+										<StackPanel>
+											<Label Content="名称" Margin="5 0" Width="140"></Label>
+											<Label Content="默认服务器" Width="130"></Label>
+											<Label Content="状态" Width="50"></Label>
+										</StackPanel>
+										<Rectangle Height="1" Fill="#EDEDEE"/>
+									</StackPanel>
+									<ItemsControl ItemsSource="{CompiledBinding Groups}" >
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<StackPanel Classes="row">
+													<StackPanel>
+														<Label Margin="5 0" Content="{CompiledBinding Name}" Width="140"></Label>
+														<Label Content="{CompiledBinding Server}" Width="130"></Label>
+														<Label Classes.Success="{CompiledBinding Enable}" Classes.Danger="{CompiledBinding !Enable}" Content="{CompiledBinding Enable,Converter={StaticResource BooleanConverter},ConverterParameter=启用|禁用}" Width="50"></Label>
+														<Label Tapped="OnClickGroupItemButtons" Name="editor" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe611;" Margin="0 2 5 2" ToolTip.Tip="编辑"></Label>
+														<Label Tapped="OnClickGroupItemButtons" Name="delete" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe705;" Margin="5 2" ToolTip.Tip="删除"></Label>
+														<Label Tapped="OnClickGroupItemButtons" Name="settings" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe603;" Margin="5 2" ToolTip.Tip="管理域名"></Label>
+													</StackPanel>
+													<Rectangle Height="1" Fill="#EDEDEE"/>
+												</StackPanel>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+									<Button Tapped="OnClickAddGroup" Classes="button primary mini" Margin="5" Content="添加" HorizontalAlignment="Right" />
+								</StackPanel>
+							</Expander>
+							<Expander VerticalAlignment="Top" IsExpanded="True">
+								<Expander.Header>
+									远程规则
+								</Expander.Header>
+								<StackPanel>
+									<ItemsControl ItemsSource="{CompiledBinding Remotes}" >
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<StackPanel Classes="row">
+													<StackPanel Orientation="Horizontal" Height="60">
+														<StackPanel Height="60" Orientation="Vertical" Width="350">
+															<StackPanel Orientation="Horizontal" Margin="5">
+																<Label FontWeight="Bold" Content="{CompiledBinding Name}" Width="150" />
+																<Label Content="{CompiledBinding Interval,StringFormat='{}{0}分钟'}" Width="80" />
+																<Label Classes.Success="{CompiledBinding Enable}" Classes.Danger="{CompiledBinding !Enable}" Content="{CompiledBinding Enable,Converter={StaticResource BooleanConverter},ConverterParameter=启用|禁用}" Width="50"></Label>
+															</StackPanel>
+															<TextBlock TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Text="{CompiledBinding Url}" Margin="5" ToolTip.Tip="{CompiledBinding Url}" />
+														</StackPanel>
+														<Label Tapped="OnClickRemoteItemButtons" Name="editor" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe611;" Margin="0 2 5 2" ToolTip.Tip="编辑"></Label>
+														<Label Tapped="OnClickRemoteItemButtons" Name="delete" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe705;" Margin="5 2" ToolTip.Tip="删除"></Label>
+													</StackPanel>
+													<Rectangle Height="1" Fill="#EDEDEE"/>
+												</StackPanel>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+									<Button Tapped="OnClickAddRemote" Classes="button primary mini" Margin="5" Content="添加" HorizontalAlignment="Right" />
+								</StackPanel>
+							</Expander>
+						</StackPanel>
+					</ScrollViewer>
+				</DataTemplate>
+				<DataTemplate DataType="viewmodels:LogsViewModel">
+					<TextBox Height="480" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" IsReadOnly="True" Text="{CompiledBinding LogsText}"/>
+				</DataTemplate>
+				<DataTemplate DataType="viewmodels:AboutViewModel">
+					<StackPanel>
+						<Rectangle Height="40" Fill="Transparent"/>
+						<Image Source="/Assets/DesktopDNS.ico" Height="100" Width="100" />
+						<Rectangle Height="40" Fill="Transparent"/>
+						<StackPanel Orientation="Horizontal" Margin="5">
+							<Label Classes="label">官网网站：</Label>
+							<Label Classes="text link" Width="400">https://github.com/zsea/DesktopDNS</Label>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="5">
+							<Label Classes="label">当前版本：</Label>
+							<Label Classes="text" Content="{CompiledBinding Version}"></Label>
+						</StackPanel>
+						<Rectangle Height="1" Fill="#EDEDEE" Margin=" 5"/>
+						<Label Margin="10 5">感谢以下项目：</Label>
+						<Label Margin="10 5" Classes="link">https://github.com/kapetan/dns</Label>
+						<Label Margin="10 5" Classes="link">https://github.com/AvaloniaUI/Avalonia</Label>
+						<Label Margin="10 5" Classes="link">https://github.com/irihitech/Semi.Avalonia</Label>
+						<Image Source="/Assets/qr.png" Height="100" Width="100" Margin="0 10" />
+					</StackPanel>
+				</DataTemplate>
+				<DataTemplate DataType="viewmodels:NotFoundViewModel">
+					<Label>Not Found</Label>
+				</DataTemplate>
+			</StackPanel.DataTemplates>
+			<ContentControl Content="{CompiledBinding ContentArea}" />
+		</StackPanel>
+
+	</SplitView>
+	
+</Window>
