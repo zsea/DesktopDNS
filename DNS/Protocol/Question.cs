@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
 using DNS.Protocol.Utils;
 
@@ -11,11 +12,10 @@ namespace DNS.Protocol {
 
         public static IList<Question> GetAllFromArray(byte[] message, int offset, int questionCount, out int endOffset) {
             IList<Question> questions = new List<Question>(questionCount);
-
             for (int i = 0; i < questionCount; i++) {
+
                 questions.Add(FromArray(message, offset, out offset));
             }
-
             endOffset = offset;
             return questions;
         }
@@ -26,8 +26,7 @@ namespace DNS.Protocol {
 
         public static Question FromArray(byte[] message, int offset, out int endOffset) {
             Domain domain = Domain.FromArray(message, offset, out offset);
-            Tail tail = Marshalling.Struct.GetStruct<Tail>(message, offset, Tail.SIZE);
-
+            Tail tail = Tail.FromArray(message,offset,Tail.SIZE);// Marshalling.Struct.GetStruct<Tail>(message, offset, Tail.SIZE);
             endOffset = offset + Tail.SIZE;
 
             return new Question(domain, tail.Type, tail.Class);
@@ -64,26 +63,47 @@ namespace DNS.Protocol {
 
             result
                 .Append(domain.ToArray())
-                .Append(Marshalling.Struct.GetBytes(new Tail { Type = Type, Class = Class }));
+                //.Append(Marshalling.Struct.GetBytes(new Tail { Type = Type, Class = Class }));
+                .Append(new Tail { Type = Type, Class = Class }.GetBytes());
 
             return result.ToArray();
         }
 
         public override string ToString() {
-            return ObjectStringifier.New(this)
-                .Add(nameof(Name), nameof(Type), nameof(Class))
+            
+            return new ObjectStringify()
+                .Add(nameof(Name),this.Name)
+                .Add(nameof(Type), this.Type)
+                .Add(nameof(Class), this.Class)
                 .ToString();
         }
 
-        [Marshalling.Endian(Marshalling.Endianness.Big)]
-        [StructLayout(LayoutKind.Sequential, Pack = 2)]
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)]
         private struct Tail {
             public const int SIZE = 4;
 
             private ushort type;
             private ushort klass;
+            public static Tail FromArray(byte[] messages,int dataOffset,int size)
+            {
+                Tail tail = new Tail();
+                tail.type = (ushort)(messages[dataOffset++] << 8 | messages[dataOffset++]);
+                tail.klass = (ushort)(messages[dataOffset++] << 8 | messages[dataOffset++]);
+                return tail;
+            }
+            public byte[] GetBytes()
+            {
+                byte[] bytes = new byte[4]; // type(2字节) + klass(2字节) = 4字节
 
+                // 将 type 转换为大端序字节（高位在前）
+                bytes[0] = (byte)(type >> 8);  // 取高8位
+                bytes[1] = (byte)(type & 0xFF); // 取低8位
+
+                // 将 klass 转换为大端序字节（高位在前）
+                bytes[2] = (byte)(klass >> 8);  // 取高8位
+                bytes[3] = (byte)(klass & 0xFF); // 取低8位
+
+                return bytes;
+            }
             public RecordType Type {
                 get { return (RecordType) type; }
                 set { type = (ushort) value; }

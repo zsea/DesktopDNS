@@ -43,7 +43,11 @@ namespace DNS.Protocol.ResourceRecords {
         public Domain ExchangeDomainName { get; }
 
         public override string ToString() {
-            return Stringify().Add("Preference", "ExchangeDomainName").ToString();
+            //return Stringify().Add("Preference", "ExchangeDomainName").ToString();
+            return Stringify()
+                .Add(nameof(Preference),this.Preference)
+                .Add(nameof(ExchangeDomainName),this.ExchangeDomainName)
+                .ToString();
         }
     }
 }

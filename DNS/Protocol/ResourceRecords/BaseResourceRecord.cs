@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using DNS.Protocol.Utils;
 
 namespace DNS.Protocol.ResourceRecords {
@@ -40,10 +42,19 @@ namespace DNS.Protocol.ResourceRecords {
         public byte[] ToArray() {
             return record.ToArray();
         }
-
-        internal ObjectStringifier Stringify() {
-            return ObjectStringifier.New(this)
-                .Add(nameof(Name), nameof(Type), nameof(Class), nameof(TimeToLive), nameof(DataLength));
-        }
+        protected ObjectStringify Stringify()
+        {
+            return new ObjectStringify()
+                .Add(nameof(Name), this.Name)
+                .Add(nameof(Type), this.Type)
+                .Add(nameof(Class), this.Class)
+                .Add(nameof(TimeToLive), this.TimeToLive)
+                .Add(nameof(DataLength), this.DataLength)
+                ;
+        } 
+        //internal ObjectStringifier Stringify() {
+        //    return ObjectStringifier.New(this)
+        //        .Add(nameof(Name), nameof(Type), nameof(Class), nameof(TimeToLive), nameof(DataLength));
+        //}
     }
 }

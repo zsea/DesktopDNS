@@ -81,7 +81,10 @@ namespace DNS.Protocol.ResourceRecords {
         }
 
         public override string ToString() {
-            return Stringify().Add("TextData", (object) ToStringTextData()).ToString();
+            //return Stringify().Add("TextData", (object) ToStringTextData()).ToString();
+            return Stringify()
+                .Add(nameof(TextData), this.ToStringTextData())
+                .ToString();
         }
     }
 }

@@ -15,7 +15,10 @@ namespace DNS.Protocol.ResourceRecords {
         public Domain NSDomainName { get; }
 
         public override string ToString() {
-            return Stringify().Add("NSDomainName").ToString();
+            //return Stringify().Add("NSDomainName").ToString();
+            return Stringify()
+                .Add(nameof(NSDomainName),this.NSDomainName)
+                .ToString();
         }
     }
 }

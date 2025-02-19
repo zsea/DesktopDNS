@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace DNS.Protocol.ResourceRecords {
@@ -22,7 +23,8 @@ namespace DNS.Protocol.ResourceRecords {
         public IPAddress IPAddress { get; }
 
         public override string ToString() {
-            return Stringify().Add("IPAddress").ToString();
+            return Stringify().Add(nameof(IPAddress), this.IPAddress).ToString();
+            //return Stringify().Add("IPAddress").ToString();
         }
     }
 }

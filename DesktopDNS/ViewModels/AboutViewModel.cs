@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace DesktopDNS.ViewModels
 {
-    public class AboutViewModel: ViewModelBase
+    public class AboutViewModel : ViewModelBase
     {
-        public string Version { get;  } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public string Version
+        {
+            get
+            {
+                Version? version = Assembly.GetExecutingAssembly().GetName().Version;
+                if (version == null) return "";
+                return version.ToString();
+
+            }
+        }
     }
 }

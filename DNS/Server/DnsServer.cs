@@ -193,18 +193,28 @@ namespace DNS.Server
         private async Task HandleRequest(byte[] data, IPEndPoint remote)
         {
             Request request = null;
-
             try
             {
+                Console.WriteLine("接收到数据:{0}", string.Join(" ", data.Select(x => x.ToString("X2"))));
                 request = Request.FromArray(data);
                 OnEvent(Requested, new RequestedEventArgs(request, data, remote));
 
                 IResponse response = await resolver.Resolve(request).ConfigureAwait(false);
-
-                OnEvent(Responded, new RespondedEventArgs(request, response, data, remote));
-                await udp
-                    .SendAsync(response.ToArray(), response.Size, remote)
-                    .WithCancellationTimeout(TimeSpan.FromMilliseconds(UDP_TIMEOUT)).ConfigureAwait(false);
+                try
+                {
+                    OnEvent(Responded, new RespondedEventArgs(request, response, data, remote));
+                }
+                catch (Exception ex)
+                {
+                    OnError(ex);
+                }
+                finally
+                {
+                    Console.WriteLine("发送响应数据:{0}====>{1}", remote.ToString(), string.Join(" ", response.ToArray().Select(x => x.ToString("X2"))));
+                    await udp
+                        .SendAsync(response.ToArray(), response.Size, remote)
+                        .WithCancellationTimeout(TimeSpan.FromMilliseconds(UDP_TIMEOUT)).ConfigureAwait(false);
+                }
             }
             catch (SocketException e) { OnError(e); }
             catch (ArgumentException e) { OnError(e); }

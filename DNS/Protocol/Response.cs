@@ -165,14 +165,21 @@ namespace DNS.Protocol {
         public override string ToString() {
             UpdateHeader();
 
-            return ObjectStringifier.New(this)
-                .Add(nameof(Header), header)
-                .Add(nameof(Questions), nameof(AnswerRecords), nameof(AuthorityRecords), nameof(AdditionalRecords))
+            //return ObjectStringifier.New(this)
+            //    .Add(nameof(Header), header)
+            //    .Add(nameof(Questions), nameof(AnswerRecords), nameof(AuthorityRecords), nameof(AdditionalRecords))
+            //    .ToString();
+            return ObjectStringify.New()
+                .Add(nameof(Header), this.header)
+                .Add(nameof(Questions), Questions)
+                .Add(nameof(AnswerRecords), AnswerRecords)
+                .Add(nameof(AuthorityRecords), AuthorityRecords)
+                .Add(nameof(AdditionalRecords), AdditionalRecords)
                 .ToString();
         }
 
         private void UpdateHeader() {
-            header.QuestionCount = questions.Count;
+            header.QuestionCount = (ushort)questions.Count;
             header.AnswerRecordCount = answers.Count;
             header.AuthorityRecordCount = authority.Count;
             header.AdditionalRecordCount = additional.Count;

@@ -15,7 +15,8 @@ namespace DNS.Protocol.ResourceRecords {
         public Domain CanonicalDomainName { get; }
 
         public override string ToString() {
-            return Stringify().Add("CanonicalDomainName").ToString();
+            //return Stringify().Add("CanonicalDomainName").ToString();
+            return Stringify().Add(nameof(CanonicalDomainName), this.CanonicalDomainName).ToString();
         }
     }
 }

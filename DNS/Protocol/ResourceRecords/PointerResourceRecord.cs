@@ -16,7 +16,10 @@ namespace DNS.Protocol.ResourceRecords {
         public Domain PointerDomainName { get; }
 
         public override string ToString() {
-            return Stringify().Add("PointerDomainName").ToString();
+            //return Stringify().Add("PointerDomainName").ToString();
+            return Stringify()
+                .Add(nameof(PointerDomainName), this.PointerDomainName)
+                .ToString();
         }
     }
 }

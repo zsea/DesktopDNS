@@ -7,7 +7,7 @@ using DNS.Protocol.ResourceRecords;
 
 namespace DNS.Protocol {
     public class Request : IRequest {
-        private static readonly RandomNumberGenerator RANDOM = new RNGCryptoServiceProvider();
+        private static readonly RandomNumberGenerator RANDOM = RandomNumberGenerator.Create();
 
         private IList<Question> questions;
         private Header header;
@@ -16,7 +16,6 @@ namespace DNS.Protocol {
         public static Request FromArray(byte[] message) {
             Header header = Header.FromArray(message);
             int offset = header.Size;
-
             if (header.Response || header.QuestionCount == 0 ||
                     header.AnswerRecordCount + header.AuthorityRecordCount > 0 ||
                     header.ResponseCode != ResponseCode.NoError) {
@@ -103,14 +102,19 @@ namespace DNS.Protocol {
         public override string ToString() {
             UpdateHeader();
 
-            return ObjectStringifier.New(this)
-                .Add(nameof(Header), header)
-                .Add(nameof(Questions), nameof(AdditionalRecords))
-                .ToString();
+            //return ObjectStringifier.New(this)
+            //    .Add(nameof(Header), header)
+            //    .Add(nameof(Questions), nameof(AdditionalRecords))
+            //    .ToString();
+            return ObjectStringify.New()
+                .Add(nameof(Header), this.header)
+                 .Add(nameof(Questions), this.Questions)
+                 .Add(nameof(AdditionalRecords), this.AdditionalRecords)
+                 .ToString();
         }
 
         private void UpdateHeader() {
-            header.QuestionCount = questions.Count;
+            header.QuestionCount = (ushort)questions.Count;
             header.AdditionalRecordCount = additional.Count;
         }
 

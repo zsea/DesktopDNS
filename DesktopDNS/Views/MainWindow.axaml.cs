@@ -15,6 +15,10 @@ namespace DesktopDNS.Views
     {
         private void TrayIcon()
         {
+            //byte[] msg = new byte[] { 0, 98, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3, 119, 119, 119, 3, 108, 115, 122, 3, 103, 111, 118, 2, 99, 110, 0, 0, 28, 0, 1 };
+            //DNS.Protocol.Request.FromArray(msg);
+
+            //System.IO.File.AppendAllLines("G:\\project_codes\\desktop_dns\\desktop_dns\\DesktopDNS\\bin\\Release\\net9.0\\publish\\win-x64\\d.txt", new string[] { "[Question] ====", "x:" + x, "y:" + y, "[Question] ====" });
             var notifyIcon = new TrayIcon();
             notifyIcon.Menu ??= new NativeMenu();
             notifyIcon.ToolTipText = "DesktopDNS";
@@ -257,6 +261,7 @@ namespace DesktopDNS.Views
             model.Shutdown();
         }
 
+        
         /// <summary>
         /// 保存服务设置
         /// </summary>
@@ -272,12 +277,44 @@ namespace DesktopDNS.Views
                 //_ =ViewModels.MessageBoxViewModel.Show(this, "错误", "默认服务器不是有效的IP地址。", MessageBoxViewModel.MessageBoxIcon.Error, MessageBoxViewModel.MessageBoxButton.OK);
                 return;
             }
+            bool changedAutoRun = Server.configure.AutoRun != model.AutoRun;
             Server.configure.Port = model.Port;
             Server.configure.AutoRun = model.AutoRun;
             Server.configure.DefaultServer = model.DefaultServer;
             Server.configure.LogLevel = model.LogLevel;
+
             if (Server.configure.Save())
             {
+                if (changedAutoRun) {
+                    string appName = "DesktopDNS";
+                    if (Server.configure.AutoRun)
+                    {
+                        string? appPath = Environment.ProcessPath;
+                        if (appPath != null)
+                        {
+                            if (OperatingSystem.IsWindows())
+                            {
+                                Helper.SetAutoStartRegistry(appName, appPath);
+                            }
+                            else if (OperatingSystem.IsLinux()) { 
+                                Helper.SetLinuxAutoStart(appName,appPath);
+                            }
+                            
+                        }
+                    }
+                    else
+                    {
+                        if (OperatingSystem.IsWindows())
+                        {
+                            Helper.RemoveAutoStartRegistry(appName);
+                        }
+                        else if (OperatingSystem.IsLinux())
+                        {
+                            Helper.RemoveLinuxAutoStart(appName);
+                        }
+
+                    }
+                }
                 Logger.Level=Logger.ParseLevel(model.LogLevel);
                 this.alert("保存成功，配置内容将在下次启动服务时生效。", "提示");
             }

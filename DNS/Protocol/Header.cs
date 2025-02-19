@@ -5,9 +5,6 @@ using DNS.Protocol.Utils;
 
 namespace DNS.Protocol {
     // 12 bytes message header
-    [Marshalling.Endian(Marshalling.Endianness.Big)]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)]
     public struct Header {
         public const int SIZE = 12;
 
@@ -15,8 +12,16 @@ namespace DNS.Protocol {
             if (header.Length < SIZE) {
                 throw new ArgumentException("Header length too small");
             }
-
-            return Marshalling.Struct.GetStruct<Header>(header, 0, SIZE);
+            Header h=new Header();
+            h.id = (ushort)(header[0] << 8 | header[1]);
+            h.flag0 = header[2];
+            h.flag1 = header[3];
+            h.qdCount= (ushort)(header[4] << 8 | header[5]);
+            h.anCount = (ushort)(header[6] << 8 | header[7]);
+            h.nsCount = (ushort)(header[8] << 8 | header[9]);
+            h.arCount = (ushort)(header[10] << 8 | header[11]);
+            return h;
+            //return Marshalling.Struct.GetStruct<Header>(header, 0, SIZE);
         }
 
         private ushort id;
@@ -111,14 +116,44 @@ namespace DNS.Protocol {
         }
 
         public byte[] ToArray() {
-            return Marshalling.Struct.GetBytes(this);
+            byte[] data=new byte[Size];
+            data[0] = (byte)(this.id >> 8);
+            data[1]= (byte)(this.id & 0xFF);
+            data[2] = this.flag0;
+            data[3]= this.flag1;
+            data[4]= (byte)(this.qdCount >> 8);
+            data[5] = (byte)(this.qdCount & 0xFF);
+            data[6] = (byte)(this.anCount >> 8);
+            data[7] = (byte)(this.anCount & 0xFF);
+            data[8] = (byte)(this.nsCount >> 8);
+            data[9] = (byte)(this.nsCount & 0xFF);
+            data[10] = (byte)(this.arCount >> 8);
+            data[11] = (byte)(this.arCount & 0xFF);
+            return data;
+            //return Marshalling.Struct.GetBytes(this);
         }
 
         public override string ToString() {
-            return ObjectStringifier.New(this)
-                .AddAll()
-                .Remove(nameof(Size))
-                .ToString();
+            //return ObjectStringifier.New(this)
+            //    .AddAll()
+            //    .Remove(nameof(Size))
+            //    .ToString();
+            return ObjectStringify.New()
+                .Add(nameof(Id), this.Id)
+                 .Add(nameof(QuestionCount), this.QuestionCount)
+                  .Add(nameof(AnswerRecordCount), this.AnswerRecordCount)
+                   .Add(nameof(AuthorityRecordCount), this.AuthorityRecordCount)
+                    .Add(nameof(AdditionalRecordCount), this.AdditionalRecordCount)
+                     .Add(nameof(Response), this.Response)
+                      .Add(nameof(OperationCode), this.OperationCode)
+                       .Add(nameof(AuthorativeServer), this.AuthorativeServer)
+                        .Add(nameof(Truncated), this.Truncated)
+                         .Add(nameof(RecursionDesired), this.RecursionDesired)
+                          .Add(nameof(RecursionAvailable), this.RecursionAvailable)
+                           .Add(nameof(AuthenticData), this.AuthenticData)
+                            .Add(nameof(CheckingDisabled), this.CheckingDisabled)
+                             .Add(nameof(ResponseCode), this.ResponseCode)
+                             .ToString();
         }
 
         // Query/Response Flag

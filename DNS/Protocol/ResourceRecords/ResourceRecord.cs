@@ -32,7 +32,7 @@ namespace DNS.Protocol.ResourceRecords {
 
         public static ResourceRecord FromArray(byte[] message, int offset, out int endOffset) {
             Domain domain = Domain.FromArray(message, offset, out offset);
-            Tail tail = Marshalling.Struct.GetStruct<Tail>(message, offset, Tail.SIZE);
+            Tail tail = Tail.FromArray(message,offset,Tail.SIZE);// Marshalling.Struct.GetStruct<Tail>(message, offset, Tail.SIZE);
 
             byte[] data = new byte[tail.DataLength];
 
@@ -90,25 +90,37 @@ namespace DNS.Protocol.ResourceRecords {
 
             result
                 .Append(domain.ToArray())
-                .Append(Marshalling.Struct.GetBytes<Tail>(new Tail() {
+                //.Append(Marshalling.Struct.GetBytes<Tail>(new Tail() {
+                //    Type = Type,
+                //    Class = Class,
+                //    TimeToLive = ttl,
+                //    DataLength = data.Length
+                //}))
+                .Append(new Tail()
+                {
                     Type = Type,
                     Class = Class,
                     TimeToLive = ttl,
                     DataLength = data.Length
-                }))
+                }.GetBytes())
                 .Append(data);
 
             return result.ToArray();
         }
 
         public override string ToString() {
-            return ObjectStringifier.New(this)
-                .Add(nameof(Name), nameof(Type), nameof(Class), nameof(TimeToLive), nameof(DataLength))
+            //return ObjectStringifier.New(this)
+            //    .Add(nameof(Name), nameof(Type), nameof(Class), nameof(TimeToLive), nameof(DataLength))
+            //    .ToString();
+            return ObjectStringify.New()
+                .Add(nameof(Name),this.Name)
+                .Add(nameof(Type), this.Type)
+                .Add(nameof(Class), this.Class)
+                .Add(nameof(TimeToLive), this.TimeToLive)
+                .Add(nameof(DataLength), this.DataLength)
                 .ToString();
         }
 
-        [Marshalling.Endian(Marshalling.Endianness.Big)]
-        [StructLayout(LayoutKind.Sequential, Pack = 2)]
         private struct Tail {
             public const int SIZE = 10;
 
@@ -116,7 +128,41 @@ namespace DNS.Protocol.ResourceRecords {
             private ushort klass;
             private uint ttl;
             private ushort dataLength;
+            public static Tail FromArray(byte[] messages,int dataOffset,int size)
+            {
+                Tail tail = new Tail();
+                tail.type = (ushort)(messages[dataOffset++] << 8 | messages[dataOffset++]);
+                tail.klass = (ushort)(messages[dataOffset++] << 8 | messages[dataOffset++]);
+                tail.ttl = (uint)((messages[dataOffset++] << 24) | (messages[dataOffset++] << 16) | (messages[dataOffset++] << 8) | messages[dataOffset++]);
+                tail.dataLength = (ushort)(messages[dataOffset++] << 8 | messages[dataOffset++]);
+                return tail;
+            }
+            public byte[] GetBytes()
+            {
+                byte[] bytes = new byte[SIZE]; // type(2) + klass(2) + ttl(4) + dataLength(2) = 10字节
 
+                int offset = 0;
+
+                // 写入 type（大端序）
+                bytes[offset++] = (byte)(type >> 8);    // 高8位
+                bytes[offset++] = (byte)(type & 0xFF);  // 低8位
+
+                // 写入 klass（大端序）
+                bytes[offset++] = (byte)(klass >> 8);   // 高8位
+                bytes[offset++] = (byte)(klass & 0xFF); // 低8位
+
+                // 写入 ttl（大端序）
+                bytes[offset++] = (byte)(ttl >> 24);     // 最高8位
+                bytes[offset++] = (byte)(ttl >> 16);     // 次高8位
+                bytes[offset++] = (byte)(ttl >> 8);      // 次低8位
+                bytes[offset++] = (byte)(ttl & 0xFF);    // 最低8位
+
+                // 写入 dataLength（大端序）
+                bytes[offset++] = (byte)(dataLength >> 8);   // 高8位
+                bytes[offset] = (byte)(dataLength & 0xFF);   // 低8位
+
+                return bytes;
+            }
             public RecordType Type {
                 get { return (RecordType) type; }
                 set { type = (ushort) value; }
