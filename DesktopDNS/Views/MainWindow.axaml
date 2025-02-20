@@ -137,13 +137,13 @@
 									<TextBlock Grid.Row="0" Grid.Column="0" Margin="0 5"
 											   VerticalAlignment="Center">监听端口</TextBlock>
 									<NumericUpDown Grid.Row="0" Grid.Column="1"  Margin="0 5" Minimum="1" Maximum="65535"
-											  Width="200" Value="{CompiledBinding Port}" HorizontalAlignment="Left" />
+											  Width="225" Value="{CompiledBinding Port}" HorizontalAlignment="Left" />
 									<TextBlock Grid.Row="1" Grid.Column="0"  Margin="0 5"
 											   VerticalAlignment="Center">默认DNS服务器</TextBlock>
-									<TextBox  Grid.Row="1" Grid.Column="1" Watermark="8.8.8.8" Text="{CompiledBinding DefaultServer}" Margin="0 5" />
+									<TextBox   Width="225" Grid.Row="1" Grid.Column="1" Watermark="8.8.8.8" Text="{CompiledBinding DefaultServer}" Margin="0 5" />
 									<TextBlock Grid.Row="2" Grid.Column="0"  Margin="0 5"
 											   VerticalAlignment="Center">日志级别</TextBlock>
-									<SplitButton Width="200" Content="{CompiledBinding LogLevel}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" >
+									<SplitButton Width="225" Content="{CompiledBinding LogLevel}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" >
 										<SplitButton.Flyout>
 											<MenuFlyout Placement="BottomEdgeAlignedRight">
 												<MenuItem Header="Trace" Click="OnSwitchLogLevel" />
@@ -182,7 +182,7 @@
 											<DataTemplate>
 												<StackPanel Classes="row">
 													<StackPanel>
-														<Label Margin="5 0" Content="{CompiledBinding Name}" Width="140"></Label>
+														<Label Margin="5 0" Content="{CompiledBinding Name}" Width="100"></Label>
 														<Label Content="{CompiledBinding Server}" Width="130"></Label>
 														<Label Classes.Success="{CompiledBinding Enable}" Classes.Danger="{CompiledBinding !Enable}" Content="{CompiledBinding Enable,Converter={StaticResource BooleanConverter},ConverterParameter=启用|禁用}" Width="50"></Label>
 														<Label Tapped="OnClickGroupItemButtons" Name="editor" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe611;" Margin="0 2 5 2" ToolTip.Tip="编辑"></Label>
