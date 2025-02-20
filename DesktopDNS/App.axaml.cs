@@ -10,6 +10,7 @@ using DesktopDNS.ViewModels;
 using DesktopDNS.Views;
 using ExCSS;
 using System;
+using System.Globalization;
 using System.Linq;
 using Ursa.Controls;
 
@@ -28,7 +29,7 @@ namespace DesktopDNS
             {
                 // Line below is needed to remove Avalonia data validation.
                 // Without this line you will get duplicate validations from both Avalonia and CT
-                BindingPlugins.DataValidators.RemoveAt(0);
+                BindingPlugins.DataValidators?.RemoveAt(0);
                 bool isHide = false,isAuto=false;
                 if (desktop.Args != null)
                 {

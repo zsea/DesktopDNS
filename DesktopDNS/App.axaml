@@ -1,14 +1,13 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DesktopDNS.App"
-			 xmlns:semi="https://irihi.tech/semi"
              xmlns:local="using:DesktopDNS"
 			 RequestedThemeVariant="Light"
              >
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
 	<Application.Styles>
-		<semi:SemiTheme Locale="zh-CN" />
+		<FluentTheme />
 		<Style Selector="Label.label">
 			<Setter Property="FontWeight" Value="Bold" />
 			<Setter Property="FontSize" Value="14" />
@@ -42,6 +41,7 @@
 			<Style Selector="^:pointerover /template/ ContentPresenter">
 				<Setter Property="Background" Value="#ffffff" />
 				<Setter Property="BorderBrush" Value="#c0c0c0" />
+				<Setter Property="Cursor" Value="Hand" />
 			</Style>
 		</Style>
 		<Style Selector="Button.large">
@@ -58,6 +58,8 @@
 			<Setter Property="Foreground" Value="White" />
 			<Style Selector="^:pointerover /template/ ContentPresenter">
 				<Setter Property="Background" Value="#4096ff" />
+				<Setter Property="Cursor" Value="Hand" />
+				<Setter Property="Foreground" Value="White" />
 			</Style>
 		</Style>
 		<Style Selector="Button.danger">
@@ -67,6 +69,8 @@
 
 			<Style Selector="^:pointerover /template/ ContentPresenter">
 				<Setter Property="Background" Value="#ff7875" />
+				<Setter Property="Cursor" Value="Hand" />
+				<Setter Property="Foreground" Value="White" />
 			</Style>
 		</Style>
 		<Style Selector="StackPanel.grid-header">
