@@ -62,7 +62,7 @@ namespace DesktopDNS
                 "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
                 writable: true
             );
-            key?.SetValue(appName, $"\"{appPath}\"");
+            key?.SetValue(appName, $"\"{appPath}\" --hide --auto");
 
         }
         public static void RemoveAutoStartRegistry(string appName)
@@ -91,7 +91,7 @@ namespace DesktopDNS
                 $"[Desktop Entry]\n" +
                 $"Type=Application\n" +
                 $"Name={appName}\n" +
-                $"Exec={appPath}\n" +
+                $"Exec={appPath} --hide --auto\n" +
                 $"Icon={icon}\n" +
                 $"X-GNOME-Autostart-enabled=true\n");
         }
