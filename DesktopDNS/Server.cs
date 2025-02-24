@@ -54,7 +54,7 @@ namespace DesktopDNS
             // Log errors
             server.Errored += (sender, e) => {
                 Logger.Error(e.Exception.Message+"\r\n"+e.Exception.StackTrace);
-                throw e.Exception;
+                //throw e.Exception;
             };
             ListenPort = configure.Port == 0 ? 53 : configure.Port;
             if (!server.Listen(ListenPort))

@@ -27,9 +27,9 @@ namespace DesktopDNS.ViewModels
         public int ListeningPort { get=>Server.ListenPort; }
 
         private System.Timers.Timer timer;
-        public void Startup()
+        public bool Startup()
         {
-            if (!Server.Start()) return;
+            if (!Server.Start()) return false;
             OnPropertyChanged(nameof(IsRuning));
             OnPropertyChanged(nameof(DefaultServer));
             OnPropertyChanged(nameof(Port));
@@ -37,6 +37,7 @@ namespace DesktopDNS.ViewModels
             OnPropertyChanged(nameof(HandleTimes));
             OnPropertyChanged(nameof(ListeningPort));
             timer.Start();
+            return true;
 
         }
 

@@ -42,16 +42,19 @@ namespace DesktopDNS.Views
             notifyIcon.Menu.Add(new NativeMenuItemSeparator());
 
             var exit = new NativeMenuItem() { Header = "退出" };
-            exit.Click += async (sender, args) => {
-                if (Server.IsRuning) {
+            exit.Click += async (sender, args) =>
+            {
+                if (Server.IsRuning)
+                {
                     bool isVisible = this.IsVisible;
                     if (!isVisible)
                     {
                         this.Show();
                     }
-                    if(!await this.confirm("DNS服务正在运行，请确认是否退出程序？", "请确认"))
+                    if (!await this.confirm("DNS服务正在运行，请确认是否退出程序？", "请确认"))
                     {
-                        if (!isVisible) {
+                        if (!isVisible)
+                        {
                             this.Hide();
                         }
                         return;
@@ -60,7 +63,8 @@ namespace DesktopDNS.Views
                 Environment.Exit(0);
             };
             notifyIcon.Menu.Add(exit);
-            notifyIcon.Clicked += (sender, args) => {
+            notifyIcon.Clicked += (sender, args) =>
+            {
                 this.Show();
             };
         }
@@ -79,7 +83,7 @@ namespace DesktopDNS.Views
         /// 启动时是否自动启动服务
         /// </summary>
         public bool IsAuto { get; private set; }
-        public MainWindow():this(false,false)
+        public MainWindow() : this(false, false)
         {
 
         }
@@ -88,22 +92,22 @@ namespace DesktopDNS.Views
         /// </summary>
         /// <param name="isHide">启动时是否隐藏窗口</param>
         /// <param name="isAuto">启动时是否自动启动服务</param>
-        public MainWindow(bool isHide,bool isAuto)
+        public MainWindow(bool isHide, bool isAuto)
         {
             this.IsHide = isHide;
             this.IsAuto = isAuto;
             InitializeComponent();
             TrayIcon();
-            
+
         }
-       
+
         protected override void OnClosing(WindowClosingEventArgs e)
         {
             if (Server.IsRuning)
             {
                 e.Cancel = true;
                 this.Hide();
-                
+
             }
             else
             {
@@ -182,7 +186,7 @@ namespace DesktopDNS.Views
                     this.ReloadSettingsField("Groups");
                 }
             }
-            else if(label.Name== "settings")
+            else if (label.Name == "settings")
             {
                 if (Server.configure.Groups == null) return;
                 Configure.DnsGroup? group = label.DataContext as Configure.DnsGroup;
@@ -241,7 +245,10 @@ namespace DesktopDNS.Views
             if (button == null) return;
             ViewModels.StatusViewModel? model = button.DataContext as ViewModels.StatusViewModel;
             if (model == null) return;
-            model.Startup();
+            if (!model.Startup())
+            {
+                this.alert("服务启动失败。");
+            }
         }
         /// <summary>
         /// 关闭DNS服务
@@ -261,7 +268,7 @@ namespace DesktopDNS.Views
             model.Shutdown();
         }
 
-        
+
         /// <summary>
         /// 保存服务设置
         /// </summary>
@@ -277,7 +284,7 @@ namespace DesktopDNS.Views
                 //_ =ViewModels.MessageBoxViewModel.Show(this, "错误", "默认服务器不是有效的IP地址。", MessageBoxViewModel.MessageBoxIcon.Error, MessageBoxViewModel.MessageBoxButton.OK);
                 return;
             }
-            bool changedAutoRun = Server.configure.AutoRun != model.AutoRun;
+            //bool changedAutoRun = Server.configure.AutoRun != model.AutoRun;
             Server.configure.Port = model.Port;
             Server.configure.AutoRun = model.AutoRun;
             Server.configure.DefaultServer = model.DefaultServer;
@@ -285,37 +292,38 @@ namespace DesktopDNS.Views
 
             if (Server.configure.Save())
             {
-                if (changedAutoRun) {
-                    string appName = "DesktopDNS";
-                    if (Server.configure.AutoRun)
-                    {
-                        string? appPath = Environment.ProcessPath;
-                        if (appPath != null)
-                        {
-                            if (OperatingSystem.IsWindows())
-                            {
-                                Helper.SetAutoStartRegistry(appName, appPath);
-                            }
-                            else if (OperatingSystem.IsLinux()) { 
-                                Helper.SetLinuxAutoStart(appName,appPath);
-                            }
-                            
-                        }
-                    }
-                    else
+
+                string appName = "DesktopDNS";
+                if (Server.configure.AutoRun)
+                {
+                    string? appPath = Environment.ProcessPath;
+                    if (appPath != null)
                     {
                         if (OperatingSystem.IsWindows())
                         {
-                            Helper.RemoveAutoStartRegistry(appName);
+                            Helper.SetAutoStartRegistry(appName, appPath);
                         }
                         else if (OperatingSystem.IsLinux())
                         {
-                            Helper.RemoveLinuxAutoStart(appName);
+                            Helper.SetLinuxAutoStart(appName, appPath);
                         }
 
                     }
                 }
-                Logger.Level=Logger.ParseLevel(model.LogLevel);
+                else
+                {
+                    if (OperatingSystem.IsWindows())
+                    {
+                        Helper.RemoveAutoStartRegistry(appName);
+                    }
+                    else if (OperatingSystem.IsLinux())
+                    {
+                        Helper.RemoveLinuxAutoStart(appName);
+                    }
+
+                }
+
+                Logger.Level = Logger.ParseLevel(model.LogLevel);
                 this.alert("保存成功，配置内容将在下次启动服务时生效。", "提示");
             }
             else
@@ -382,35 +390,42 @@ namespace DesktopDNS.Views
         public void OnSwitchLogLevel(object sender, RoutedEventArgs e)
         {
             MenuItem? menu = sender as MenuItem;
-            if (menu == null||menu.Header==null) return;
-            string level= menu.Header.ToString()??"";
+            if (menu == null || menu.Header == null) return;
+            string level = menu.Header.ToString() ?? "";
             SettingsViewModel? svm = menu.DataContext as SettingsViewModel;
             if (svm == null) return;
-            svm.LogLevel=level;
+            svm.LogLevel = level;
             svm.OnPropertyChanged("LogLevel");
         }
 
         protected override void OnLoaded(RoutedEventArgs e)
         {
             base.OnLoaded(e);
-            if (this.IsHide) {
+            if (this.IsHide)
+            {
                 this.Hide();
             }
             if (this.IsAuto)
             {
-                MainWindowViewModel? main=this.DataContext as MainWindowViewModel;
-                if (main != null) {
+                MainWindowViewModel? main = this.DataContext as MainWindowViewModel;
+                if (main != null)
+                {
                     ViewModelBase? status = null;
                     main.contentAreas.TryGetValue("status", out status);
-                    if (status != null) { 
-                    
-                        StatusViewModel? svm=status as StatusViewModel;
-                        if (svm != null) {
-                            svm.Startup();
+                    if (status != null)
+                    {
+
+                        StatusViewModel? svm = status as StatusViewModel;
+                        if (svm != null)
+                        {
+                            if (!svm.Startup())
+                            {
+                                this.alert("服务启动失败。");
+                            }
                         }
                     }
                 }
-                
+
             }
         }
     }
