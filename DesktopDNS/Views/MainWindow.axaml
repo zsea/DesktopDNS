@@ -207,7 +207,7 @@
 											<DataTemplate>
 												<StackPanel Classes="row">
 													<StackPanel Orientation="Horizontal" Height="60">
-														<StackPanel Height="60" Orientation="Vertical" Width="350">
+														<StackPanel Height="60" Orientation="Vertical" Width="330">
 															<StackPanel Orientation="Horizontal" Margin="5">
 																<Label FontWeight="Bold" Content="{CompiledBinding Name}" Width="150" />
 																<Label Content="{CompiledBinding Interval,StringFormat='{}{0}分钟'}" Width="80" />
