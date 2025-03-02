@@ -24,17 +24,17 @@ public partial class RemoteWindow : Window
         if (model == null) { return; }
         if (string.IsNullOrWhiteSpace(model.Name))
         {
-            this.alert("名称不能为空。", "提示");
+            this.alert(I18n.i18n.Settings_Remote_Window_Error_Name_Empty, I18n.i18n.Confirm_Info_Title);
             return;
         }
         if (!Helper.IsUrl(model.Url??""))
         {
-            this.alert("URL地址无效。", "提示");
+            this.alert(I18n.i18n.Settings_Remote_Window_Error_Url_Invalid, I18n.i18n.Confirm_Info_Title);
             return;
         }
         if(model.Interval<=0)
         {
-            this.alert("更新间隔时间无效。", "提示");
+            this.alert(I18n.i18n.Settings_Remote_Window_Error_Interval_Invalid, I18n.i18n.Confirm_Info_Title);
             return;
         }
         if (Server.configure.Remotes != null)
@@ -43,7 +43,7 @@ public partial class RemoteWindow : Window
             {
                 if (Server.configure.Remotes.Exists(x => string.Equals(x.Name, model.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    this.alert("不能存在相同的分组名称。", "提示");
+                    this.alert(I18n.i18n.Settings_Remote_Window_Error_Name_Exists, I18n.i18n.Confirm_Info_Title);
                     return;
                 }
             }
@@ -54,7 +54,7 @@ public partial class RemoteWindow : Window
                     // 修改了名称
                     if (Server.configure.Remotes.Exists(x => string.Equals(x.Name, model.Name, StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        this.alert("不能存在相同的分组名称。", "提示");
+                        this.alert(I18n.i18n.Settings_Remote_Window_Error_Name_Exists, I18n.i18n.Confirm_Info_Title);
                         return;
                     }
                 }

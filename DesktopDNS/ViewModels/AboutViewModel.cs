@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace DesktopDNS.ViewModels
 {
-    public class AboutViewModel : ViewModelBase
+    internal class AboutViewModel : ViewModelBase
     {
+
         public string Version
         {
             get

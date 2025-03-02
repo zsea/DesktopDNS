@@ -27,12 +27,12 @@ public partial class DnsGroupWindow : Window
         if (model == null) { return; }
         if (string.IsNullOrWhiteSpace(model.Name))
         {
-            this.alert("名称不能为空。", "提示");
+            this.alert(I18n.i18n.Settings_Group_Window_Error_Name_Empty, I18n.i18n.Confirm_Info_Title);
             return;
         }
         if (!Helper.IsIPv4(model.Server))
         {
-            this.alert("默认DNS服务器无效。必须是一个有效的IPv4地址。", "提示");
+            this.alert(I18n.i18n.Settings_Group_Window_Error_DNS_Invalid, I18n.i18n.Confirm_Info_Title);
             return;
         }
         if (Server.configure.Groups != null)
@@ -41,7 +41,7 @@ public partial class DnsGroupWindow : Window
             {
                 if (Server.configure.Groups.Exists(x => string.Equals(x.Name, model.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    this.alert("不能存在相同的分组名称。", "提示");
+                    this.alert(I18n.i18n.Settings_Group_Window_Error_Name_Exists, I18n.i18n.Confirm_Info_Title);
                     return;
                 }
             }
@@ -52,7 +52,7 @@ public partial class DnsGroupWindow : Window
                     // 修改了名称
                     if (Server.configure.Groups.Exists(x => string.Equals(x.Name, model.Name, StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        this.alert("不能存在相同的分组名称。", "提示");
+                        this.alert(I18n.i18n.Settings_Group_Window_Error_Name_Exists, I18n.i18n.Confirm_Info_Title);
                         return;
                     }
                 }

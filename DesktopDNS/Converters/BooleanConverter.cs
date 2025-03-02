@@ -1,4 +1,5 @@
 ﻿using Avalonia.Data.Converters;
+using DesktopDNS.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,17 +14,17 @@ namespace DesktopDNS.Converters
         
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            string True = "启用", False = "禁用";
+            string True = "Enabled", False = "Disabled";
             if(parameter is string)
             {
-                string[] vs = ((string)parameter).Split("|");
-                if (vs.Length>=1)
-                {
-                    True = vs[0]; 
-                }
-                if(vs.Length>=2)
-                {
-                    False = vs[1];
+                string p = ((string)parameter);
+                switch (p) {
+                    case "Status":
+                        {
+                            True = I18n.i18n.Boolean_Status_True;
+                            False = I18n.i18n.Boolean_Status_False;
+                            break;
+                        }
                 }
             }
             if (value == null) return False;

@@ -18,7 +18,7 @@
 		xmlns:converters="using:DesktopDNS.Converters"
 		>
 	<Window.Resources>
-		<converters:BooleanConverter x:Key="BooleanConverter"/>
+		<converters:BooleanConverter x:Key="BooleanConverter" />
 	</Window.Resources>
 	<Window.Styles>
 
@@ -53,7 +53,7 @@
 					<StackPanel VerticalAlignment="Center"  Orientation="Horizontal" Margin="10 0">
 						<Svg Path="/Assets/status.svg" Height="16" />
 						<Rectangle Fill="Transparent" Width="10" />
-						<Label Content="状态"></Label>
+						<Label Content="{Binding i18n.Menu_Status}"></Label>
 						<Rectangle Fill="Transparent" Width="200" />
 					</StackPanel>
 				</Border>
@@ -61,7 +61,7 @@
 					<StackPanel VerticalAlignment="Center"  Orientation="Horizontal" Margin="10 0">
 						<Svg Path="/Assets/settings.svg" Height="16" />
 						<Rectangle Fill="Transparent" Width="10" />
-						<Label Content="设置"></Label>
+						<Label Content="{Binding i18n.Menu_Settings}"></Label>
 						<Rectangle Fill="Transparent" Width="200" />
 					</StackPanel>
 				</Border>
@@ -69,7 +69,7 @@
 					<StackPanel VerticalAlignment="Center"  Orientation="Horizontal" Margin="10 0">
 						<Svg Path="/Assets/logs.svg" Height="16" />
 						<Rectangle Fill="Transparent" Width="10" />
-						<Label Content="日志"></Label>
+						<Label Content="{Binding i18n.Menu_Logs}"></Label>
 						<Rectangle Fill="Transparent" Width="200" />
 					</StackPanel>
 				</Border>
@@ -77,7 +77,7 @@
 					<StackPanel VerticalAlignment="Center"  Orientation="Horizontal" Margin="10 0">
 						<Svg Path="/Assets/about.svg" Height="16" />
 						<Rectangle Fill="Transparent" Width="10" />
-						<Label Content="关于"></Label>
+						<Label Content="{Binding i18n.Menu_About}"></Label>
 						<Rectangle Fill="Transparent" Width="200" />
 					</StackPanel>
 				</Border>
@@ -89,37 +89,42 @@
 				<DataTemplate DataType="viewmodels:StatusViewModel">
 					<StackPanel Margin="20 30">
 						<StackPanel Orientation="Horizontal" Margin="5">
-							<Label Classes="label">当前状态：</Label>
-							<Label Classes="text danger" Content="已停止" IsVisible="{CompiledBinding !IsRuning}"></Label>
-							<Label Classes="text success" Content="运行中" IsVisible="{CompiledBinding IsRuning}"></Label>
+							<Label Classes="label" Content="{Binding i18n.Status_Status}" Width="130"></Label>
+							<Label Classes="text danger" Content="{Binding i18n.Status_Status_Stopped}" IsVisible="{CompiledBinding !IsRuning}"></Label>
+							<Label Classes="text success" Content="{Binding i18n.Status_Status_Running}" IsVisible="{CompiledBinding IsRuning}"></Label>
 
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="5">
-							<Label Classes="label">监听端口：</Label>
+							<Label Classes="label" Content="{Binding i18n.Status_Listen_Port}" Width="130"></Label>
 							<Label Classes="text" Content="{CompiledBinding ListeningPort}" IsVisible="{CompiledBinding IsRuning}"></Label>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="5">
-							<Label Classes="label">默认服务器：</Label>
+							<Label Classes="label" Content="{Binding i18n.Status_Default_Server}" Width="130"></Label>
 							<Label Classes="text" Content="{CompiledBinding DefaultServer}" IsVisible="{CompiledBinding IsRuning}"></Label>
 						</StackPanel>
 						<Rectangle Height="30" Fill="Transparent"/>
-						<Button HorizontalAlignment="Center" Classes="button primary large" IsVisible="{CompiledBinding !IsRuning}" Tapped="OnStart">启动</Button>
-						<Button HorizontalAlignment="Center" Classes="button danger large" IsVisible="{CompiledBinding IsRuning}" Tapped="OnShutdown">停止</Button>
+						<Button HorizontalAlignment="Center" Classes="button primary large" IsVisible="{CompiledBinding !IsRuning}" Tapped="OnStart" Content="{Binding i18n.Status_Button_Start}"></Button>
+						<Button HorizontalAlignment="Center" Classes="button danger large" IsVisible="{CompiledBinding IsRuning}" Tapped="OnShutdown" Content="{Binding i18n.Status_Button_Stop}"></Button>
 						<Rectangle Height="30" Fill="Transparent"/>
 						<Rectangle Height="1" Fill="#EDEDEE" Margin=" 5"/>
 						<Rectangle Height="30" Fill="Transparent"/>
 						<StackPanel IsVisible="{CompiledBinding IsRuning}">
-							<StackPanel Orientation="Horizontal">
-								<Label Classes="label">运行时长：</Label>
+							<StackPanel Orientation="Horizontal" Margin="0 6">
+								<Label Classes="label" Content="{Binding i18n.Status_Run_Time}" Width="130"></Label>
 								<Label Classes="text quaternary" Content="{CompiledBinding RunText}" Margin="10 2" FontSize="12"></Label>
-								<Label Classes="label">处理请求：</Label>
-								<Label Classes="text quaternary" Content="{CompiledBinding HandleTimes}" Margin="10 2" FontSize="12"></Label>
-
 							</StackPanel>
-							<StackPanel Orientation="Horizontal" Margin="0 10">
-								<Label Classes="label">本地解析：</Label>
+							<StackPanel Orientation="Horizontal" Margin="0 6">
+								<Label Classes="label" Content="{Binding i18n.Status_Requested}" Width="130"></Label>
+								<Label Classes="text quaternary" Content="{CompiledBinding HandleTimes}" Margin="10 2" FontSize="12"></Label>
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" Margin="0 6">
+								<Label Classes="label" Content="{Binding i18n.Status_Local_Requested}" Width="130"></Label>
 								<Label Classes="text quaternary" Content="{CompiledBinding LocalResolveTimes}" Margin="10 2" FontSize="12"></Label>
-								<Label Classes="label">缓存数量：</Label>
+	
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" Margin="0 6">
+
+								<Label Classes="label" Content="{Binding i18n.Status_Cached}" Width="130"></Label>
 								<Label Classes="text quaternary" Content="{CompiledBinding CacheCount}" Margin="10 2" FontSize="12"></Label>
 							</StackPanel>
 						</StackPanel>
@@ -130,19 +135,19 @@
 						<StackPanel>
 							<Expander VerticalAlignment="Top" IsExpanded="True" Width="410">
 								<Expander.Header>
-									服务设置
+									<Label Content="{Binding i18n.Settings_Header_Service}" />
 								</Expander.Header>
 								<Grid RowDefinitions="*,*,*,*,*" ColumnDefinitions="150,*">
 									
 									<TextBlock Grid.Row="0" Grid.Column="0" Margin="0 5"
-											   VerticalAlignment="Center">监听端口</TextBlock>
+											   VerticalAlignment="Center" Text="{Binding i18n.Settings_Service_Port}"></TextBlock>
 									<NumericUpDown Grid.Row="0" Grid.Column="1"  Margin="0 5" Minimum="1" Maximum="65535"
 											  Width="225" Value="{CompiledBinding Port}" HorizontalAlignment="Left" />
 									<TextBlock Grid.Row="1" Grid.Column="0"  Margin="0 5"
-											   VerticalAlignment="Center">默认DNS服务器</TextBlock>
+											   VerticalAlignment="Center" Text="{Binding i18n.Settings_Service_Default_DNS}"></TextBlock>
 									<TextBox   Width="225" Grid.Row="1" Grid.Column="1" Watermark="8.8.8.8" Text="{CompiledBinding DefaultServer}" Margin="0 5" />
 									<TextBlock Grid.Row="2" Grid.Column="0"  Margin="0 5"
-											   VerticalAlignment="Center">日志级别</TextBlock>
+											   VerticalAlignment="Center" Text="{Binding i18n.Settings_Service_Log_Level}"></TextBlock>
 									<SplitButton Width="225" Content="{CompiledBinding LogLevel}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" >
 										<SplitButton.Flyout>
 											<MenuFlyout Placement="BottomEdgeAlignedRight">
@@ -156,24 +161,24 @@
 										</SplitButton.Flyout>
 									</SplitButton>
 									<TextBlock Grid.Row="3" Grid.Column="0" Margin="0 5"
-											   VerticalAlignment="Center">开机自动启动</TextBlock>
+											   VerticalAlignment="Center" Text="{Binding i18n.Settings_Service_Auto_Start}"></TextBlock>
 									<CheckBox   Grid.Row="3" Grid.Column="1" Margin="0 5" VerticalAlignment="Center" IsChecked="{CompiledBinding AutoRun}"/>
 									<StackPanel Grid.Row="4" Grid.Column="0"></StackPanel>
 									<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-										<Button Tapped="OnSaveServerSettings" Classes="button primary mini" Margin="5">保存</Button>
+										<Button Tapped="OnSaveServerSettings" Classes="button primary mini" Margin="5" Content="{Binding i18n.Settings_Button_Service_Save}"></Button>
 									</StackPanel>
 								</Grid>
 							</Expander>
 							<Expander VerticalAlignment="Top" IsExpanded="True" Width="410">
 								<Expander.Header>
-									分组管理
+									<Label Content="{Binding i18n.Settings_Header_Group}" />
 								</Expander.Header>
 								<StackPanel>
 									<StackPanel Classes="grid-header">
 										<StackPanel>
-											<Label Content="名称" Margin="5 0" Width="140"></Label>
-											<Label Content="默认服务器" Width="130"></Label>
-											<Label Content="状态" Width="50"></Label>
+											<Label Content="{Binding i18n.Settings_Group_Col_Name}" Margin="5 0" Width="100"></Label>
+											<Label Content="{Binding i18n.Settings_Group_Col_DNS}" Width="130"></Label>
+											<Label Content="{Binding i18n.Settings_Group_Col_Status}" Width="50"></Label>
 										</StackPanel>
 										<Rectangle Height="1" Fill="#EDEDEE"/>
 									</StackPanel>
@@ -182,24 +187,24 @@
 											<DataTemplate>
 												<StackPanel Classes="row">
 													<StackPanel>
-														<Label Margin="5 0" Content="{CompiledBinding Name}" Width="100"></Label>
-														<Label Content="{CompiledBinding Server}" Width="130"></Label>
-														<Label Classes.Success="{CompiledBinding Enable}" Classes.Danger="{CompiledBinding !Enable}" Content="{CompiledBinding Enable,Converter={StaticResource BooleanConverter},ConverterParameter=启用|禁用}" Width="50"></Label>
-														<Label Tapped="OnClickGroupItemButtons" Name="editor" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe611;" Margin="0 2 5 2" ToolTip.Tip="编辑"></Label>
-														<Label Tapped="OnClickGroupItemButtons" Name="delete" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe705;" Margin="5 2" ToolTip.Tip="删除"></Label>
-														<Label Tapped="OnClickGroupItemButtons" Name="settings" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe603;" Margin="5 2" ToolTip.Tip="管理域名"></Label>
+														<Label Margin="5 0" Content="{CompiledBinding Value.Name}" Width="100"></Label>
+														<Label Content="{CompiledBinding Value.Server}" Width="130"></Label>
+														<Label Classes.Success="{CompiledBinding Value.Enable}" Classes.Danger="{CompiledBinding !Value.Enable}" Content="{CompiledBinding Value.Enable,Converter={StaticResource BooleanConverter},ConverterParameter=Status}" Width="50"></Label>
+														<Label Tapped="OnClickGroupItemButtons" Name="editor" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe611;" Margin="0 2 5 2" ToolTip.Tip="{Binding i18n.Settings_Group_Tooltip_Edit}"></Label>
+														<Label Tapped="OnClickGroupItemButtons" Name="delete" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe705;" Margin="5 2" ToolTip.Tip="{Binding i18n.Settings_Group_Tooltip_Delete}"></Label>
+														<Label Tapped="OnClickGroupItemButtons" Name="settings" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe603;" Margin="5 2" ToolTip.Tip="{Binding i18n.Settings_Group_Tooltip_Manage_Domain}"></Label>
 													</StackPanel>
 													<Rectangle Height="1" Fill="#EDEDEE"/>
 												</StackPanel>
 											</DataTemplate>
 										</ItemsControl.ItemTemplate>
 									</ItemsControl>
-									<Button Tapped="OnClickAddGroup" Classes="button primary mini" Margin="5" Content="添加" HorizontalAlignment="Right" />
+									<Button Tapped="OnClickAddGroup" Classes="button primary mini" Margin="5" Content="{Binding i18n.Settings_Button_Service_Add}" HorizontalAlignment="Right" />
 								</StackPanel>
 							</Expander>
 							<Expander VerticalAlignment="Top" IsExpanded="True" Width="410">
 								<Expander.Header>
-									远程规则
+									<Label Content="{Binding i18n.Settings_Header_Remote}" />
 								</Expander.Header>
 								<StackPanel>
 									<ItemsControl ItemsSource="{CompiledBinding Remotes}" >
@@ -209,22 +214,47 @@
 													<StackPanel Orientation="Horizontal" Height="60">
 														<StackPanel Height="60" Orientation="Vertical" Width="330">
 															<StackPanel Orientation="Horizontal" Margin="5">
-																<Label FontWeight="Bold" Content="{CompiledBinding Name}" Width="150" />
-																<Label Content="{CompiledBinding Interval,StringFormat='{}{0}分钟'}" Width="80" />
-																<Label Classes.Success="{CompiledBinding Enable}" Classes.Danger="{CompiledBinding !Enable}" Content="{CompiledBinding Enable,Converter={StaticResource BooleanConverter},ConverterParameter=启用|禁用}" Width="50"></Label>
+																<Label FontWeight="Bold" Content="{CompiledBinding Value.Name}" Width="150" />
+																<StackPanel Orientation="Horizontal" Width="80">
+																	<Label Content="{CompiledBinding Value.Interval}" Padding="0 3" />
+																	<Label Content="{CompiledBinding i18n.Settings_Remote_Unit_Minute}" Padding="0 3" />
+																</StackPanel>
+																<Label Classes.Success="{CompiledBinding Value.Enable}" Classes.Danger="{CompiledBinding !Value.Enable}" Content="{CompiledBinding Value.Enable,Converter={StaticResource BooleanConverter},ConverterParameter=Status}" Width="50"></Label>
 															</StackPanel>
-															<TextBlock TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Text="{CompiledBinding Url}" Margin="5" ToolTip.Tip="{CompiledBinding Url}" />
+															<TextBlock TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Text="{CompiledBinding Value.Url}" Margin="5" ToolTip.Tip="{CompiledBinding Value.Url}" />
 														</StackPanel>
-														<Label Tapped="OnClickRemoteItemButtons" Name="editor" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe611;" Margin="0 2 5 2" ToolTip.Tip="编辑"></Label>
-														<Label Tapped="OnClickRemoteItemButtons" Name="delete" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe705;" Margin="5 2" ToolTip.Tip="删除"></Label>
+														<Label Tapped="OnClickRemoteItemButtons" Name="editor" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe611;" Margin="0 2 5 2" ToolTip.Tip="{Binding i18n.Settings_Remote_Tooltip_Edit}"></Label>
+														<Label Tapped="OnClickRemoteItemButtons" Name="delete" Classes="link" FontFamily="/Assets/#iconfont" Content="&#xe705;" Margin="5 2" ToolTip.Tip="{Binding i18n.Settings_Remote_Tooltip_Delete}"></Label>
 													</StackPanel>
 													<Rectangle Height="1" Fill="#EDEDEE"/>
 												</StackPanel>
 											</DataTemplate>
 										</ItemsControl.ItemTemplate>
 									</ItemsControl>
-									<Button Tapped="OnClickAddRemote" Classes="button primary mini" Margin="5" Content="添加" HorizontalAlignment="Right" />
+									<Button Tapped="OnClickAddRemote" Classes="button primary mini" Margin="5" Content="{Binding i18n.Settings_Button_Remote_Add}" HorizontalAlignment="Right" />
 								</StackPanel>
+							</Expander>
+							<Expander VerticalAlignment="Top" IsExpanded="True" Width="410">
+								<Expander.Header>
+									<Label Content="{Binding i18n.Settings_Header_System}" />
+								</Expander.Header>
+								<Grid RowDefinitions="*,*" ColumnDefinitions="150,*">
+
+									<TextBlock Grid.Row="0" Grid.Column="0" Margin="0 5"
+											   VerticalAlignment="Center" Text="{Binding i18n.Settings_System_Language}"></TextBlock>
+									<SplitButton  Margin="0 5" Width="225" Content="{CompiledBinding i18n.Language_Name}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" >
+										<SplitButton.Flyout>
+											<MenuFlyout Placement="BottomEdgeAlignedRight" ItemsSource="{Binding Languages}">
+												
+												
+											</MenuFlyout>
+										</SplitButton.Flyout>
+									</SplitButton>
+									<StackPanel Grid.Row="1" Grid.Column="0"></StackPanel>
+									<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+										<Button Tapped="OnSaveSystemSettings" Classes="button primary mini" Margin="5" Content="{Binding i18n.Settings_Button_System_Save}"></Button>
+									</StackPanel>
+								</Grid>
 							</Expander>
 						</StackPanel>
 					</ScrollViewer>
@@ -238,15 +268,15 @@
 						<Image Source="/Assets/DesktopDNS.ico" Height="100" Width="100" />
 						<Rectangle Height="40" Fill="Transparent"/>
 						<StackPanel Orientation="Horizontal" Margin="5">
-							<Label Classes="label">官网网站：</Label>
+							<Label Classes="label" Content="{Binding i18n.About_Homepage}"></Label>
 							<Label Classes="text link" Width="400">https://github.com/zsea/DesktopDNS</Label>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="5">
-							<Label Classes="label">当前版本：</Label>
+							<Label Classes="label" Content="{Binding i18n.About_Version}"></Label>
 							<Label Classes="text" Content="{CompiledBinding Version}"></Label>
 						</StackPanel>
 						<Rectangle Height="1" Fill="#EDEDEE" Margin=" 5"/>
-						<Label Margin="10 2">感谢以下项目：</Label>
+						<Label Margin="10 2" Content="{Binding i18n.About_Thank}"></Label>
 						<Label Margin="10 2" Classes="link">https://github.com/kapetan/dns</Label>
 						<Label Margin="10 2" Classes="link">https://github.com/AvaloniaUI/Avalonia</Label>
 						<Image Source="/Assets/qr.png" Height="100" Width="100" Margin="0 10" />

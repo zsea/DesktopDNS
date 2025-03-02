@@ -14,7 +14,7 @@ namespace DesktopDNS.ViewModels
 
         public bool IsOk { get; set; } = false;
         public string Title { get {
-                return IsNew ? "添加分组" : "编辑分组";
+                return IsNew ? I18n.i18n.Settings_Group_Window_Add_Title : I18n.i18n.Settings_Group_Window_Edit_Title;
             } }
         public string OriginName { get; private set; } = "";
         public bool IsNew { get; private set; } = true;

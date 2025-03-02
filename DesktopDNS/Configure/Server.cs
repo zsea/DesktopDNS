@@ -23,6 +23,7 @@ public class Server
     /// 是否开机自动启动
     /// </summary>
     public bool AutoRun { get; set; }
+    public string? Language { get; set; }
 
     public List<DnsGroup>? Groups { get; set; }
     public List<RemoteRule>? Remotes { get; set; }

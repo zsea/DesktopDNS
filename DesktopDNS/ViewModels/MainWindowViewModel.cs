@@ -10,7 +10,7 @@ namespace DesktopDNS.ViewModels
         //public string Greeting => "Welcome to Avalonia!";
 #pragma warning restore CA1822 // Mark members as static
 
-
+       
         private string checkedItem  = "status";
         
         public bool IsCheckedStatus => checkedItem== "status";

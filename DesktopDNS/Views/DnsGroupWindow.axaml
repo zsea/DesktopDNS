@@ -21,28 +21,28 @@
 		</StackPanel>
 		<StackPanel Classes="form">
 			<StackPanel Classes="form-item">
-				<Label  Classes="form-item-label">名称</Label>
+				<Label  Classes="form-item-label" Content="{Binding i18n.Settings_Group_Window_Form_Name}"></Label>
 				<StackPanel Classes="form-item-control">
 					<TextBox  Text="{CompiledBinding Name}" />
 				</StackPanel>
 			</StackPanel>
 			<StackPanel Classes="form-item">
-				<Label  Classes="form-item-label">默认DNS服务器</Label>
+				<Label  Classes="form-item-label" Content="{Binding i18n.Settings_Group_Window_Form_Server}"></Label>
 				<StackPanel Classes="form-item-control">
 					<TextBox  Text="{CompiledBinding Server}" />
 				</StackPanel>
 
 			</StackPanel>
 			<StackPanel Classes="form-item">
-				<Label  Classes="form-item-label">启用</Label>
+				<Label  Classes="form-item-label" Content="{Binding i18n.Settings_Group_Window_Form_Enable}"></Label>
 				<StackPanel Classes="form-item-control">
 					<CheckBox IsChecked="{CompiledBinding Enable}"></CheckBox>
 				</StackPanel>
 
 			</StackPanel>
 			<StackPanel Classes="form-item-buttons">
-				<Button Tapped="OnOk" Classes="button primary mini" Margin="5">保存</Button>
-				<Button Tapped="OnCancel" Classes="button default mini" Margin="5">取消</Button>
+				<Button Tapped="OnOk" Classes="button primary mini" Margin="5" Content="{Binding i18n.Settings_Group_Window_Form_Save}"></Button>
+				<Button Tapped="OnCancel" Classes="button default mini" Margin="5" Content="{Binding i18n.Settings_Group_Window_Form_Cancel}"></Button>
 			</StackPanel>
 		</StackPanel>
 	</StackPanel>

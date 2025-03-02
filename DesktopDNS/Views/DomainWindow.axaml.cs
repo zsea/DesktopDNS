@@ -25,7 +25,7 @@ public partial class DomainWindow : Window
         if (label == null) return;
         if (label.Name == "editor")
         {
-            Configure.Domain? domain = label.DataContext as Configure.Domain;
+            Configure.Domain? domain = (label.DataContext as I18n<Configure.Domain>)?.Value;
             if (domain == null) return;
 
             DomainItemWindow window = new DomainItemWindow();
@@ -46,9 +46,9 @@ public partial class DomainWindow : Window
         else if (label.Name == "delete")
         {
 
-            Configure.Domain? domain = label.DataContext as Configure.Domain;
+            Configure.Domain? domain = (label.DataContext as I18n<Configure.Domain>)?.Value;
             if (domain == null) return;
-            if (await this.confirm($"你确定要删除域名 [{domain.Hostname}] 的解析吗？", "请确认"))
+            if (await this.confirm(string.Format(I18n.i18n.Settings_Group_Domain_Window_Confirm_Title, domain.Hostname), I18n.i18n.Confirm_Default_Title))
             {
                 group.Domains = group.Domains.Where(x => !string.Equals(x.Hostname,domain.Hostname,StringComparison.CurrentCultureIgnoreCase)||x.Mode!=domain.Mode).ToList();
                 Server.configure.Save();
@@ -85,7 +85,7 @@ public partial class DomainWindow : Window
             }
             else if (group.Domains.Exists(x => string.Equals(x.Hostname, domain.Hostname, StringComparison.CurrentCultureIgnoreCase)&&x.RecordType==domain.RecordType))
             {
-                this.alert("不能存在相同的域名规则。", "提示");
+                this.alert(I18n.i18n.Settings_Group_Domain_Window_Error_Domain_Exists, I18n.i18n.Confirm_Info_Title);
                 return;
             }
             group.Domains.Add(domain);

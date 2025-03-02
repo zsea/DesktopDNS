@@ -8,6 +8,11 @@ namespace DesktopDNS.ViewModels
 {
     internal class MessageBoxViewModel:ViewModelBase
     {
+        public MessageBoxViewModel()
+        {
+            this.OKText = I18n.i18n.Confirm_Button_OK;
+            this.CancelText=I18n.i18n.Confirm_Button_Cancel; 
+        }
         public enum MessageBoxResult { OK, Cancel };
         public enum MessageBoxIcon { None,Info,Error,Stop,Question };
         public enum MessageBoxButton { OK=1,Cancel=2};
@@ -53,8 +58,8 @@ namespace DesktopDNS.ViewModels
                 return string.Empty;
             }
         }
-        public string OKText { get; private set; } = "确定";
-        public string CancelText { get; private set; } = "取消";
+        public string OKText { get; private set; }
+        public string CancelText { get; private set; }
         public bool ButtonOKIsVisible { get {
                 return (this.buttons & MessageBoxButton.OK) == MessageBoxButton.OK;
             } }

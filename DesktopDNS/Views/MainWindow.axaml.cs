@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 
 namespace DesktopDNS.Views
 {
@@ -26,13 +27,13 @@ namespace DesktopDNS.Views
             //AssetLoader.Exists()
             var bitmap = new Bitmap(AssetLoader.Open(new Uri("avares://DesktopDNS/Assets/DesktopDNS.ico")));
             notifyIcon.Icon = new WindowIcon(bitmap);
-            var status = new NativeMenuItem() { Header = "状态" };
+            var status = new NativeMenuItem() { Header = I18n.i18n.Menu_Status };
             status.Click += (s, e) => { SwitchContent("status"); };
-            var settings = new NativeMenuItem() { Header = "设置" };
+            var settings = new NativeMenuItem() { Header = I18n.i18n.Menu_Settings };
             settings.Click += (s, e) => { SwitchContent("settings"); };
-            var logs = new NativeMenuItem() { Header = "日志" };
+            var logs = new NativeMenuItem() { Header = I18n.i18n.Menu_Logs };
             logs.Click += (s, e) => { SwitchContent("logs"); };
-            var about = new NativeMenuItem() { Header = "关于" };
+            var about = new NativeMenuItem() { Header = I18n.i18n.Menu_About };
             about.Click += (s, e) => { SwitchContent("about"); };
 
             notifyIcon.Menu.Add(status);
@@ -41,7 +42,7 @@ namespace DesktopDNS.Views
             notifyIcon.Menu.Add(about);
             notifyIcon.Menu.Add(new NativeMenuItemSeparator());
 
-            var exit = new NativeMenuItem() { Header = "退出" };
+            var exit = new NativeMenuItem() { Header = I18n.i18n.Menu_Exit };
             exit.Click += async (sender, args) =>
             {
                 if (Server.IsRuning)
@@ -51,7 +52,7 @@ namespace DesktopDNS.Views
                     {
                         this.Show();
                     }
-                    if (!await this.confirm("DNS服务正在运行，请确认是否退出程序？", "请确认"))
+                    if (!await this.confirm(I18n.i18n.Confirm_Exit_Message, I18n.i18n.Confirm_Default_Title))
                     {
                         if (!isVisible)
                         {
@@ -66,6 +67,28 @@ namespace DesktopDNS.Views
             notifyIcon.Clicked += (sender, args) =>
             {
                 this.Show();
+            };
+            I18n.i18n.PropertyChanged += (sender, args) => { 
+                if(args.PropertyName == nameof(I18n.i18n.Menu_Status))
+                {
+                    about.Header = I18n.i18n.Menu_Status;
+                }
+                else if (args.PropertyName == nameof(I18n.i18n.Menu_Settings))
+                {
+                    about.Header = I18n.i18n.Menu_Settings;
+                }
+                else if (args.PropertyName == nameof(I18n.i18n.Menu_Logs))
+                {
+                    about.Header = I18n.i18n.Menu_Logs;
+                }
+                else if (args.PropertyName == nameof(I18n.i18n.Menu_About))
+                {
+                    about.Header = I18n.i18n.Menu_About;
+                }
+                else if (args.PropertyName == nameof(I18n.i18n.Menu_Exit))
+                {
+                    about.Header = I18n.i18n.Menu_Exit;
+                }
             };
         }
         private void SwitchContent(string name)
@@ -159,7 +182,7 @@ namespace DesktopDNS.Views
             if (label.Name == "editor")
             {
                 if (Server.configure.Groups == null) return;
-                Configure.DnsGroup? group = label.DataContext as Configure.DnsGroup;
+                Configure.DnsGroup? group = (label.DataContext as I18n<Configure.DnsGroup>)?.Value;
                 if (group == null) return;
 
                 DnsGroupWindow window = new DnsGroupWindow();
@@ -177,9 +200,9 @@ namespace DesktopDNS.Views
             else if (label.Name == "delete")
             {
                 if (Server.configure.Groups == null) return;
-                Configure.DnsGroup? group = label.DataContext as Configure.DnsGroup;
+                Configure.DnsGroup? group = (label.DataContext as I18n<Configure.DnsGroup>)?.Value;
                 if (group == null) return;
-                if (await this.confirm($"你确定要删除分组 [{group.Name}] 吗？", "请确认"))
+                if (await this.confirm(string.Format(I18n.i18n.Settings_Group_Confirm_Delete, group.Name), I18n.i18n.Confirm_Default_Title))
                 {
                     Server.configure.Groups = Server.configure.Groups.Where(x => x.Name != group.Name).ToList();
                     Server.configure.Save();
@@ -189,7 +212,7 @@ namespace DesktopDNS.Views
             else if (label.Name == "settings")
             {
                 if (Server.configure.Groups == null) return;
-                Configure.DnsGroup? group = label.DataContext as Configure.DnsGroup;
+                Configure.DnsGroup? group = (label.DataContext as I18n<Configure.DnsGroup>)?.Value;
                 if (group == null) return;
 
                 DomainWindow window = new DomainWindow();
@@ -205,7 +228,7 @@ namespace DesktopDNS.Views
             if (label.Name == "editor")
             {
                 if (Server.configure.Remotes == null) return;
-                Configure.RemoteRule? rule = label.DataContext as Configure.RemoteRule;
+                Configure.RemoteRule? rule = (label.DataContext as I18n<Configure.RemoteRule>)?.Value;
                 if (rule == null) return;
 
                 RemoteWindow window = new RemoteWindow();
@@ -224,9 +247,9 @@ namespace DesktopDNS.Views
             else if (label.Name == "delete")
             {
                 if (Server.configure.Remotes == null) return;
-                Configure.RemoteRule? rule = label.DataContext as Configure.RemoteRule;
+                Configure.RemoteRule? rule = (label.DataContext as I18n<Configure.RemoteRule>)?.Value;
                 if (rule == null) return;
-                if (await this.confirm($"你确定要删除远程规则 [{rule.Name}] 吗？", "请确认"))
+                if (await this.confirm(string.Format(I18n.i18n.Settings_Remote_Confirm_Delete,rule.Name), I18n.i18n.Confirm_Default_Title))
                 {
                     Server.configure.Remotes = Server.configure.Remotes.Where(x => x.Name != rule.Name).ToList();
                     Server.configure.Save();
@@ -247,7 +270,7 @@ namespace DesktopDNS.Views
             if (model == null) return;
             if (!model.Startup())
             {
-                this.alert("服务启动失败。");
+                this.error(I18n.i18n.Settings_Service_Error_Startup_Fail, I18n.i18n.Confirm_Error_Title);
             }
         }
         /// <summary>
@@ -257,7 +280,7 @@ namespace DesktopDNS.Views
         /// <param name="e"></param>
         private async void OnShutdown(object sender, RoutedEventArgs e)
         {
-            if (MessageBoxViewModel.MessageBoxResult.OK != await ViewModels.MessageBoxViewModel.Show(this, "请确认", "你确定要停止DNS服务吗？", MessageBoxViewModel.MessageBoxIcon.Question))
+            if (MessageBoxViewModel.MessageBoxResult.OK != await ViewModels.MessageBoxViewModel.Show(this, I18n.i18n.Confirm_Default_Title, I18n.i18n.Confirm_Stop_Message, MessageBoxViewModel.MessageBoxIcon.Question))
             {
                 return;
             }
@@ -280,7 +303,7 @@ namespace DesktopDNS.Views
             if (model == null) return;
             if (!Helper.IsIPv4(model.DefaultServer))
             {
-                this.alert("默认服务器不是有效的IP地址。", "提示");
+                this.alert(I18n.i18n.Settings_Service_Error_IPv4_Invalid, I18n.i18n.Confirm_Info_Title);
                 //_ =ViewModels.MessageBoxViewModel.Show(this, "错误", "默认服务器不是有效的IP地址。", MessageBoxViewModel.MessageBoxIcon.Error, MessageBoxViewModel.MessageBoxButton.OK);
                 return;
             }
@@ -324,11 +347,11 @@ namespace DesktopDNS.Views
                 }
 
                 Logger.Level = Logger.ParseLevel(model.LogLevel);
-                this.alert("保存成功，配置内容将在下次启动服务时生效。", "提示");
+                this.alert(I18n.i18n.Settings_Service_Save_Success, I18n.i18n.Confirm_Info_Title);
             }
             else
             {
-                this.error("保存失败，请检查设置是否正确。");
+                this.error(I18n.i18n.Settings_Service_Error_Save_Fail, I18n.i18n.Confirm_Error_Title);
             }
         }
         public async void OnClickAddGroup(object sender, RoutedEventArgs e)
@@ -348,7 +371,7 @@ namespace DesktopDNS.Views
                 }
                 else if (Server.configure.Groups.Exists(x => string.Equals(x.Name, group.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    this.alert("不能存在相同的分组名称。", "提示");
+                    this.alert(I18n.i18n.Settings_Group_Window_Error_Name_Exists, I18n.i18n.Confirm_Info_Title);
                     return;
                 }
                 Server.configure.Groups.Add(group);
@@ -379,7 +402,7 @@ namespace DesktopDNS.Views
                 }
                 else if (Server.configure.Remotes.Exists(x => string.Equals(x.Name, remote.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    this.alert("不能存在相同的规则名称。", "提示");
+                    this.alert(I18n.i18n.Settings_Remote_Window_Error_Name_Exists, I18n.i18n.Confirm_Info_Title);
                     return;
                 }
                 Server.configure.Remotes.Add(remote);
@@ -397,7 +420,21 @@ namespace DesktopDNS.Views
             svm.LogLevel = level;
             svm.OnPropertyChanged("LogLevel");
         }
-
+        public void OnSaveSystemSettings(object sender, RoutedEventArgs e)
+        {
+            SettingsViewModel? model = sender.GetContext<SettingsViewModel>();
+            if (model == null) return;
+            Server.configure.Language = model.CurrentLanguage;
+            if (Server.configure.Save())
+            {
+                this.alert(I18n.i18n.Settings_Save_Success, I18n.i18n.Confirm_Info_Title);
+                //TrayIcon();
+            }
+            else
+            {
+                this.error(I18n.i18n.Settings_Error_Save_Fail, I18n.i18n.Confirm_Info_Title);
+            }
+        }
         protected override void OnLoaded(RoutedEventArgs e)
         {
             base.OnLoaded(e);
@@ -420,7 +457,7 @@ namespace DesktopDNS.Views
                         {
                             if (!svm.Startup())
                             {
-                                this.alert("服务启动失败。");
+                                this.error(I18n.i18n.Settings_Service_Error_Startup_Fail, I18n.i18n.Confirm_Error_Title);
                             }
                         }
                     }

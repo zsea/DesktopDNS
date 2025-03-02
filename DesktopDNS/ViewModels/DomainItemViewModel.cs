@@ -77,7 +77,7 @@ namespace DesktopDNS.ViewModels
         {
             get
             {
-                return IsNew ? "添加解析" : "编辑解析";
+                return IsNew ? I18n.i18n.Settings_Domain_Window_Add_Title : I18n.i18n.Settings_Domain_Window_Edit_Title;
             }
         }
         public bool IsNew { get; private set; } = true;

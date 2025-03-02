@@ -21,7 +21,7 @@ namespace DesktopDNS.ViewModels
         {
             get
             {
-                return IsNew ? "添加远程规则" : "编辑远程规则";
+                return IsNew ? I18n.i18n.Settings_Remote_Window_Add_Title : I18n.i18n.Settings_Remote_Window_Edit_Title;
             }
         }
         public string OriginName { get; private set; } = "";

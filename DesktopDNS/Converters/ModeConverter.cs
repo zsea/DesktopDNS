@@ -1,4 +1,5 @@
 ﻿using Avalonia.Data.Converters;
+using DesktopDNS.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,9 +19,9 @@ namespace DesktopDNS.Converters
             if (mode == null) return "";
             switch(mode)
             {
-                case "FULL":return "全等";
-                case "REGEX":return "正则";
-                case "WILDCARD":return "模式匹配";
+                case "FULL":return I18n.i18n.Settings_Domain_Mode_FULL;
+                case "REGEX":return I18n.i18n.Settings_Domain_Mode_REGEX;
+                case "WILDCARD":return I18n.i18n.Settings_Domain_Mode_WILDCARD;
             }
             return "";
 

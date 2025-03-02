@@ -16,11 +16,11 @@ namespace DesktopDNS.ViewModels
             {
                 long unixTimestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
                 long minutes = (unixTimestamp - Server.StartupTime) / 60;
-                return $"{minutes} 分钟";
+                return $"{minutes} {i18n.Status_Unit_Minute}";
             }
         }
-        public string HandleTimes { get => $"{Server.RequestedTimes} 次"; }
-        public string LocalResolveTimes { get => $"{Server.LocalResolveTimes} 次"; }
+        public string HandleTimes { get => $"{Server.RequestedTimes} {i18n.Status_Unit_Times}"; }
+        public string LocalResolveTimes { get => $"{Server.LocalResolveTimes} {i18n.Status_Unit_Times}"; }
         public long CacheCount { get => 0; }
         public string? DefaultServer { get => Server.DefaultServer; }
         public int Port { get => Server.configure.Port; }
